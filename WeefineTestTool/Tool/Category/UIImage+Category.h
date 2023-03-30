@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return 加完水印的图片
  */
-- (UIImage*)imageWaterMarkWithString:(NSString*)str point:(CGPoint)strPoint attribute:(NSDictionary*)attri image:(UIImage*)image imagePoint:(CGPoint)imgPoint alpha:(CGFloat)alpha;
+- (UIImage*)imageWaterMarkWithString:(NSString* _Nullable)str point:(CGPoint)strPoint attribute:(NSDictionary*)attri image:(UIImage* _Nullable)image imagePoint:(CGPoint)imgPoint alpha:(CGFloat)alpha;
 /**
  *  同上
  *
@@ -79,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return 同上
  */
-- (UIImage*)imageWaterMarkWithString:(NSString*)str rect:(CGRect)strRect attribute:(NSDictionary *)attri image:(UIImage *)image imageRect:(CGRect)imgRect alpha:(CGFloat)alpha;
+- (UIImage*)imageWaterMarkWithString:(NSString* _Nullable)str rect:(CGRect)strRect attribute:(NSDictionary * _Nullable)attri image:(UIImage * _Nullable)image imageRect:(CGRect)imgRect alpha:(CGFloat)alpha;
 
 // 给图片添加文字水印：
 + (UIImage *)waterMarkWithImage:(UIImage *)image text:(NSString *)text textPoint:(CGPoint)point attributedString:(NSDictionary * )attributed;

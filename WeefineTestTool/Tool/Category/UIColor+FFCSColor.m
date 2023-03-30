@@ -53,7 +53,7 @@
         return [NSString stringWithFormat:@"#FFFFFF"];
     }
     
-    return [NSString stringWithFormat:@"#XXX", (int)((CGColorGetComponents(color.CGColor))[0]*255.0),
+    return [NSString stringWithFormat:@"#%X%X%X", (int)((CGColorGetComponents(color.CGColor))[0]*255.0),
             (int)((CGColorGetComponents(color.CGColor))[1]*255.0),
             (int)((CGColorGetComponents(color.CGColor))[2]*255.0)];
 }

@@ -72,27 +72,7 @@ isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bo
 #define kColorBlue2              [UIColor colorWithHex:@"37ADDD"]
 
 #pragma mark - 字符串
-#define PD_camera                       @"PD_camera"                    // 镜头设置：广角超广角长焦
-#define PD_camerasInDevice              @"PD_camerasInDevice"           // 该手机拥有的镜头数组
-#define PD_watermark                    @"PD_watermark"                 // 水印开关
-#define PD_pictureResolution            @"PD_pictureResolution"         // 拍照分辨率
-#define PD_iso                          @"PD_iso"                       // ISO
-#define PD_whiteBalance                 @"PD_whiteBalance"              // 白平衡
-#define PD_exposureCompensation         @"PD_exposureCompensation"      // 曝光补偿
-#define PD_videoResolution              @"PD_videoResolution"           // 视频分辨率
-#define PD_availableVideoResolution     @"PD_availableVideoResolution"  // 摄像头支持的视频分辨率：4k60 / 4k30 / 1080p60 / 1080p30 / 720p60
-#define PD_soundRecording               @"PD_soundRecording"            // 声音录制
-#define PD_powerSaveTime                @"PD_powerSaveTime"             // 省电模式：多久后息屏
-#define PD_maxDepthWaring               @"PD_maxDepthWaring"            // 深度报警，如果深度报警值>200则代表没有传感器
-#define PD_Notify_RestartCamera         @"PD_Notify_RestartCamera"      // 通知：重启摄像头
-#define PD_Notify_OpenWaterMark         @"PD_Notify_OpenWaterMark"      // 通知：水印开关
 
-#pragma mark - 视频帧率
-#define PD_video_4K60                   @"4K 60FPS"
-#define PD_video_4K30                   @"4K 30FPS"
-#define PD_video_1080p60                @"1080p 60FPS"
-#define PD_video_1080p30                @"1080p 30FPS"
-#define PD_video_720p60                 @"720p 60FPS"
 
 #pragma mark - 强弱引用
 #define kWeakSelf(type)  __weak typeof(type) weak##type = type;

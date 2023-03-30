@@ -20,9 +20,6 @@
  */
 + (NSString *)getStringFromHexByte:(Byte *)bytes length:(int)length;
 
-//MD5加密
-- (NSString *)encrypt16MD5;
-
 /**
  *  截取字符串
  *

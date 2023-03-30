@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		03E19F3E29D55CBE00EE47D5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F3D29D55CBE00EE47D5 /* AppDelegate.m */; };
-		03E19F4129D55CBE00EE47D5 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F4029D55CBE00EE47D5 /* SceneDelegate.m */; };
 		03E19F4429D55CBE00EE47D5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F4329D55CBE00EE47D5 /* ViewController.m */; };
 		03E19F4729D55CBE00EE47D5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03E19F4529D55CBE00EE47D5 /* Main.storyboard */; };
 		03E19F4929D55CBF00EE47D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03E19F4829D55CBF00EE47D5 /* Assets.xcassets */; };
@@ -22,6 +21,7 @@
 		03E19F7429D5709200EE47D5 /* NSString+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F6229D5709200EE47D5 /* NSString+Category.m */; };
 		03E19F7629D5709200EE47D5 /* PDFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F6B29D5709200EE47D5 /* PDFileManager.m */; };
 		03E19F7729D5709200EE47D5 /* MAUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F6D29D5709200EE47D5 /* MAUserDefaults.m */; };
+		03E19F7F29D5871B00EE47D5 /* DataBaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F7D29D5871B00EE47D5 /* DataBaseManager.m */; };
 		C4143115CC8DB3E471B35CD8 /* Pods_WeefineTestTool.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6676402DBB238C55D7B356E4 /* Pods_WeefineTestTool.framework */; };
 /* End PBXBuildFile section */
 
@@ -29,8 +29,6 @@
 		03E19F3929D55CBE00EE47D5 /* WeefineTestTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeefineTestTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03E19F3C29D55CBE00EE47D5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		03E19F3D29D55CBE00EE47D5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		03E19F3F29D55CBE00EE47D5 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		03E19F4029D55CBE00EE47D5 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		03E19F4229D55CBE00EE47D5 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		03E19F4329D55CBE00EE47D5 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		03E19F4629D55CBE00EE47D5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -56,6 +54,8 @@
 		03E19F6E29D5709200EE47D5 /* MAUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAUserDefaults.h; sourceTree = "<group>"; };
 		03E19F7829D570D700EE47D5 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		03E19F7929D570D700EE47D5 /* CommonDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonDefines.h; sourceTree = "<group>"; };
+		03E19F7D29D5871B00EE47D5 /* DataBaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataBaseManager.m; sourceTree = "<group>"; };
+		03E19F7E29D5871B00EE47D5 /* DataBaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBaseManager.h; sourceTree = "<group>"; };
 		1E523DD7B9CE6DD14E4F6300 /* Pods-WeefineTestTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeefineTestTool.debug.xcconfig"; path = "Target Support Files/Pods-WeefineTestTool/Pods-WeefineTestTool.debug.xcconfig"; sourceTree = "<group>"; };
 		6676402DBB238C55D7B356E4 /* Pods_WeefineTestTool.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeefineTestTool.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BBEF6830C5C8BF4F64E8C0C /* Pods-WeefineTestTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeefineTestTool.release.xcconfig"; path = "Target Support Files/Pods-WeefineTestTool/Pods-WeefineTestTool.release.xcconfig"; sourceTree = "<group>"; };
@@ -109,8 +109,6 @@
 				03E19F7829D570D700EE47D5 /* PrefixHeader.pch */,
 				03E19F3C29D55CBE00EE47D5 /* AppDelegate.h */,
 				03E19F3D29D55CBE00EE47D5 /* AppDelegate.m */,
-				03E19F3F29D55CBE00EE47D5 /* SceneDelegate.h */,
-				03E19F4029D55CBE00EE47D5 /* SceneDelegate.m */,
 				03E19F4829D55CBF00EE47D5 /* Assets.xcassets */,
 				03E19F4A29D55CBF00EE47D5 /* LaunchScreen.storyboard */,
 				03E19F4D29D55CBF00EE47D5 /* Info.plist */,
@@ -122,6 +120,7 @@
 		03E19F5629D5706E00EE47D5 /* Tool */ = {
 			isa = PBXGroup;
 			children = (
+				03E19F7C29D5871B00EE47D5 /* FMDB */,
 				03E19F5A29D5709200EE47D5 /* BluetoothManager */,
 				03E19F5D29D5709200EE47D5 /* Category */,
 				03E19F6929D5709200EE47D5 /* FileManager */,
@@ -197,6 +196,15 @@
 			children = (
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		03E19F7C29D5871B00EE47D5 /* FMDB */ = {
+			isa = PBXGroup;
+			children = (
+				03E19F7D29D5871B00EE47D5 /* DataBaseManager.m */,
+				03E19F7E29D5871B00EE47D5 /* DataBaseManager.h */,
+			);
+			path = FMDB;
 			sourceTree = "<group>";
 		};
 		1EF5171C5CB90E191B9AFAEA /* Pods */ = {
@@ -338,10 +346,10 @@
 				03E19F7629D5709200EE47D5 /* PDFileManager.m in Sources */,
 				03E19F7029D5709200EE47D5 /* PDBluetoothManager.m in Sources */,
 				03E19F7229D5709200EE47D5 /* UIView+GXDXib.m in Sources */,
+				03E19F7F29D5871B00EE47D5 /* DataBaseManager.m in Sources */,
 				03E19F7329D5709200EE47D5 /* UIImage+Category.m in Sources */,
 				03E19F3E29D55CBE00EE47D5 /* AppDelegate.m in Sources */,
 				03E19F4F29D55CBF00EE47D5 /* main.m in Sources */,
-				03E19F4129D55CBE00EE47D5 /* SceneDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,9 +496,11 @@
 				DEVELOPMENT_TEAM = A39Q776AMJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WeefineTestTool/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "设备测试";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationLandscapeRight;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -516,9 +526,11 @@
 				DEVELOPMENT_TEAM = A39Q776AMJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WeefineTestTool/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "设备测试";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationLandscapeRight;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (

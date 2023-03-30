@@ -40,7 +40,7 @@
     return [self imageWaterMarkWithString:str point:strPoint attribute:attri image:nil imagePoint:CGPointZero alpha:0];
 }
 
-- (UIImage*)imageWaterMarkWithString:(NSString*)str point:(CGPoint)strPoint attribute:(NSDictionary*)attri image:(UIImage*)image imagePoint:(CGPoint)imgPoint alpha:(CGFloat)alpha
+- (UIImage*)imageWaterMarkWithString:(NSString* _Nullable)str point:(CGPoint)strPoint attribute:(NSDictionary*)attri image:(UIImage* _Nullable)image imagePoint:(CGPoint)imgPoint alpha:(CGFloat)alpha
 {
     UIGraphicsBeginImageContext(self.size);
     [self drawAtPoint:CGPointMake(0, 0) blendMode:kCGBlendModeNormal alpha:1.0];
@@ -57,7 +57,7 @@
     
 }
 
-- (UIImage*)imageWaterMarkWithString:(NSString*)str rect:(CGRect)strRect attribute:(NSDictionary *)attri image:(UIImage *)image imageRect:(CGRect)imgRect alpha:(CGFloat)alpha
+- (UIImage*)imageWaterMarkWithString:(NSString* _Nullable)str rect:(CGRect)strRect attribute:(NSDictionary * _Nullable)attri image:(UIImage *)image imageRect:(CGRect)imgRect alpha:(CGFloat)alpha
 {
     UIGraphicsBeginImageContext(self.size);
     [self drawInRect:CGRectMake(0, 0, self.size.width, self.size.height) blendMode:kCGBlendModeNormal alpha:1.0];
