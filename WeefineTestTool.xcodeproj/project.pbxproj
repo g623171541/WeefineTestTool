@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,7 @@
 		03E19F4929D55CBF00EE47D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03E19F4829D55CBF00EE47D5 /* Assets.xcassets */; };
 		03E19F4C29D55CBF00EE47D5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03E19F4A29D55CBF00EE47D5 /* LaunchScreen.storyboard */; };
 		03E19F4F29D55CBF00EE47D5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F4E29D55CBF00EE47D5 /* main.m */; };
+		C4143115CC8DB3E471B35CD8 /* Pods_WeefineTestTool.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6676402DBB238C55D7B356E4 /* Pods_WeefineTestTool.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,9 @@
 		03E19F4B29D55CBF00EE47D5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		03E19F4D29D55CBF00EE47D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		03E19F4E29D55CBF00EE47D5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1E523DD7B9CE6DD14E4F6300 /* Pods-WeefineTestTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeefineTestTool.debug.xcconfig"; path = "Target Support Files/Pods-WeefineTestTool/Pods-WeefineTestTool.debug.xcconfig"; sourceTree = "<group>"; };
+		6676402DBB238C55D7B356E4 /* Pods_WeefineTestTool.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeefineTestTool.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BBEF6830C5C8BF4F64E8C0C /* Pods-WeefineTestTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeefineTestTool.release.xcconfig"; path = "Target Support Files/Pods-WeefineTestTool/Pods-WeefineTestTool.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4143115CC8DB3E471B35CD8 /* Pods_WeefineTestTool.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,6 +52,8 @@
 			children = (
 				03E19F3B29D55CBE00EE47D5 /* WeefineTestTool */,
 				03E19F3A29D55CBE00EE47D5 /* Products */,
+				1EF5171C5CB90E191B9AFAEA /* Pods */,
+				34ABE1C928D7A785ED03FFF6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -76,6 +83,23 @@
 			path = WeefineTestTool;
 			sourceTree = "<group>";
 		};
+		1EF5171C5CB90E191B9AFAEA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1E523DD7B9CE6DD14E4F6300 /* Pods-WeefineTestTool.debug.xcconfig */,
+				9BBEF6830C5C8BF4F64E8C0C /* Pods-WeefineTestTool.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		34ABE1C928D7A785ED03FFF6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6676402DBB238C55D7B356E4 /* Pods_WeefineTestTool.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -83,9 +107,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 03E19F5229D55CBF00EE47D5 /* Build configuration list for PBXNativeTarget "WeefineTestTool" */;
 			buildPhases = (
+				8B1BBEC9A4AB655EDDD40F59 /* [CP] Check Pods Manifest.lock */,
 				03E19F3529D55CBE00EE47D5 /* Sources */,
 				03E19F3629D55CBE00EE47D5 /* Frameworks */,
 				03E19F3729D55CBE00EE47D5 /* Resources */,
+				2FB6F7F38F2F4E0074129102 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -111,7 +137,7 @@
 				};
 			};
 			buildConfigurationList = 03E19F3429D55CBE00EE47D5 /* Build configuration list for PBXProject "WeefineTestTool" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -140,6 +166,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2FB6F7F38F2F4E0074129102 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-WeefineTestTool/Pods-WeefineTestTool-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-WeefineTestTool/Pods-WeefineTestTool-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-WeefineTestTool/Pods-WeefineTestTool-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8B1BBEC9A4AB655EDDD40F59 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WeefineTestTool-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		03E19F3529D55CBE00EE47D5 /* Sources */ = {
@@ -287,12 +355,13 @@
 		};
 		03E19F5329D55CBF00EE47D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1E523DD7B9CE6DD14E4F6300 /* Pods-WeefineTestTool.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = C5S93M9922;
+				DEVELOPMENT_TEAM = A39Q776AMJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WeefineTestTool/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -300,6 +369,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -314,12 +384,13 @@
 		};
 		03E19F5429D55CBF00EE47D5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9BBEF6830C5C8BF4F64E8C0C /* Pods-WeefineTestTool.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = C5S93M9922;
+				DEVELOPMENT_TEAM = A39Q776AMJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WeefineTestTool/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -327,6 +398,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
