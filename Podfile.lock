@@ -3,20 +3,24 @@ PODS:
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
   - MBProgressHUD (1.2.0)
+  - ReactiveObjC (3.1.1)
 
 DEPENDENCIES:
   - FMDB
   - MBProgressHUD
+  - ReactiveObjC
 
 SPEC REPOS:
   trunk:
     - FMDB
     - MBProgressHUD
+    - ReactiveObjC
 
 SPEC CHECKSUMS:
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
 
-PODFILE CHECKSUM: bbbe3ad82f7348f83bdb3f47ee832d23ec20b370
+PODFILE CHECKSUM: 48b6963819c6cd1a5ed237d7b06428eac667df6e
 
 COCOAPODS: 1.12.0
