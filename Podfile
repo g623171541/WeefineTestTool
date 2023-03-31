@@ -7,5 +7,6 @@ target 'WeefineTestTool' do
 
   pod 'MBProgressHUD'
   pod 'FMDB'
+  pod 'ReactiveObjC'
   
 end
