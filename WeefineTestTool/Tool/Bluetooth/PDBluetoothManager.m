@@ -64,7 +64,7 @@ static dispatch_once_t token = 0;
         self.peripheralNameArr = @[@"WEEFINE", @"HUISH", @"Kraken"];
         // 创建一个中央管理对象
         self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-        //初始化数组
+        // 初始化数组
         self.myPeripherals = @[].mutableCopy;
         self.timerMyPeripherals = @[].mutableCopy;
         // 开启定时器
@@ -166,12 +166,10 @@ static dispatch_once_t token = 0;
     // 我的设备
     if ([self.peripheralNameArr containsObject:peripheral.name]) {
         if (![self.myPeripherals containsObject:peripheral]) {
-//            NSLog(@"111 显示 - identifier:%@  名称:%@  信号质量:%@",[peripheral.identifier UUIDString],peripheral.name,RSSI);
             // 添加到我的外围设备显示数组
             [self.myPeripherals addObject:peripheral];
         }
         if (![self.timerMyPeripherals containsObject:peripheral]) {
-//            NSLog(@"222 我的 - identifier:%@  名称:%@  信号质量:%@",[peripheral.identifier UUIDString],peripheral.name,RSSI);
             // 添加到我的外围数组
             [self.timerMyPeripherals addObject:peripheral];
         }
@@ -204,14 +202,7 @@ static dispatch_once_t token = 0;
     self.peripheral = peripheral;
     [self.peripheral setDelegate:self];
     // 访问指定外围服务
-    [self.peripheral discoverServices:@[
-                                        //                                        [CBUUID UUIDWithString:DeviceInformationServiceUUIDString],
-                                        //                                        [CBUUID UUIDWithString:BatteryServiceUUIDString],
-                                        //                                        [CBUUID UUIDWithString:ButtonServiceUUIDString],
-                                        //                                        [CBUUID UUIDWithString:SensorServiceUUIDString],
-                                        //                                        [CBUUID UUIDWithString:hrsServiceUUIDString]
-                                        ]];
-    
+    [self.peripheral discoverServices:nil];
     NSLog(@"连接外围成功 identifier:%@  名称:%@",[peripheral.identifier UUIDString],peripheral.name);
 }
 
