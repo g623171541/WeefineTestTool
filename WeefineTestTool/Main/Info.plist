@@ -18,5 +18,7 @@
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict/>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 </dict>
 </plist>

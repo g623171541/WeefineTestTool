@@ -16,17 +16,54 @@
                         <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1bf-5K-TSB" userLabel="left View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1bf-5K-TSB" userLabel="left View">
                                 <rect key="frame" x="10" y="10" width="240" height="394"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="xB0-6b-4B7">
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="xB0-6b-4B7">
                                         <rect key="frame" x="10" y="20" width="220" height="354"/>
                                         <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="tvW-Cf-s4l">
+                                                <rect key="frame" x="0.0" y="0.0" width="220" height="35.5"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Mti-UL-fU8">
+                                                        <rect key="frame" x="0.0" y="8.5" width="220" height="18"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TWD-az-Z7A">
+                                                                <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="18" id="I18-1v-g4L"/>
+                                                                    <constraint firstAttribute="height" constant="18" id="SSM-d5-qaG"/>
+                                                                </constraints>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                        <real key="value" value="9"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="蓝牙设备列表" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gX-l7-kwe">
+                                                                <rect key="frame" x="28" y="0.0" width="192" height="18"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="w6o-D9-IVs">
-                                                <rect key="frame" x="0.0" y="0.0" width="220" height="24"/>
+                                                <rect key="frame" x="0.0" y="35.5" width="220" height="35.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="1yq-oJ-sh4">
-                                                        <rect key="frame" x="0.0" y="3" width="155" height="18"/>
+                                                        <rect key="frame" x="0.0" y="8.5" width="155" height="18"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dGU-Ed-Ek9">
                                                                 <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
@@ -53,21 +90,26 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mra-hs-FUx">
-                                                        <rect key="frame" x="196" y="0.0" width="24" height="24"/>
+                                                        <rect key="frame" x="196" y="5.5" width="24" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="24" id="C2u-PR-hjr"/>
                                                             <constraint firstAttribute="width" constant="24" id="rSm-4W-EaO"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" title="Button" image="icon_ok"/>
+                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="5YN-Ka-3gV">
-                                                <rect key="frame" x="0.0" y="41.5" width="220" height="24"/>
+                                                <rect key="frame" x="0.0" y="71" width="220" height="35"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="boD-B5-gjO">
-                                                        <rect key="frame" x="0.0" y="3" width="155" height="18"/>
+                                                        <rect key="frame" x="0.0" y="8.5" width="155" height="18"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FoZ-2l-hi7">
                                                                 <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
@@ -94,21 +136,26 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="scZ-mo-DRP">
-                                                        <rect key="frame" x="196" y="0.0" width="24" height="24"/>
+                                                        <rect key="frame" x="196" y="5.5" width="24" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="24" id="AeS-SX-IqF"/>
                                                             <constraint firstAttribute="height" constant="24" id="q2Z-1q-lF1"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" title="Button" image="icon_ok"/>
+                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="v2k-uI-osa">
-                                                <rect key="frame" x="0.0" y="82.5" width="220" height="24"/>
+                                                <rect key="frame" x="0.0" y="106" width="220" height="35.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ier-Zr-6W5">
-                                                        <rect key="frame" x="0.0" y="3" width="155" height="18"/>
+                                                        <rect key="frame" x="0.0" y="9" width="155" height="18"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Men-Wi-BXU">
                                                                 <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
@@ -135,21 +182,26 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="18G-W9-WKK">
-                                                        <rect key="frame" x="196" y="0.0" width="24" height="24"/>
+                                                        <rect key="frame" x="196" y="6" width="24" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="24" id="SCy-Yr-mmz"/>
                                                             <constraint firstAttribute="height" constant="24" id="XUA-Sz-kxJ"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" title="Button" image="icon_ok"/>
+                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="9vh-0J-pRZ">
-                                                <rect key="frame" x="0.0" y="124" width="220" height="24"/>
+                                                <rect key="frame" x="0.0" y="141.5" width="220" height="35.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="PXJ-KC-AYT">
-                                                        <rect key="frame" x="0.0" y="3" width="155" height="18"/>
+                                                        <rect key="frame" x="0.0" y="9" width="155" height="18"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cm5-Iu-ux7">
                                                                 <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
@@ -176,21 +228,26 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Org-vN-YpG">
-                                                        <rect key="frame" x="196" y="0.0" width="24" height="24"/>
+                                                        <rect key="frame" x="196" y="6" width="24" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="24" id="0Va-8o-nIu"/>
                                                             <constraint firstAttribute="width" constant="24" id="M7D-bd-kZt"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" title="Button" image="icon_ok"/>
+                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="Qy9-Ti-ZpM">
-                                                <rect key="frame" x="0.0" y="165" width="220" height="24"/>
+                                                <rect key="frame" x="0.0" y="177" width="220" height="35.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="RMh-gj-ze2">
-                                                        <rect key="frame" x="0.0" y="3" width="155" height="18"/>
+                                                        <rect key="frame" x="0.0" y="8.5" width="155" height="18"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XYy-lD-fVG">
                                                                 <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
@@ -217,21 +274,26 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iuN-fF-Vn2">
-                                                        <rect key="frame" x="196" y="0.0" width="24" height="24"/>
+                                                        <rect key="frame" x="196" y="5.5" width="24" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="24" id="VMP-9k-Lnn"/>
                                                             <constraint firstAttribute="height" constant="24" id="vsW-J7-Fmx"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" title="Button" image="icon_ok"/>
+                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="5SR-Vc-kvb">
-                                                <rect key="frame" x="0.0" y="206.5" width="220" height="24"/>
+                                                <rect key="frame" x="0.0" y="212.5" width="220" height="35.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="xEf-9T-2BA">
-                                                        <rect key="frame" x="0.0" y="3" width="155" height="18"/>
+                                                        <rect key="frame" x="0.0" y="8.5" width="155" height="18"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="6" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OVH-sq-Ten">
                                                                 <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
@@ -258,21 +320,26 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Yv-Eu-xHG">
-                                                        <rect key="frame" x="196" y="0.0" width="24" height="24"/>
+                                                        <rect key="frame" x="196" y="5.5" width="24" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="24" id="DIk-xU-sMk"/>
                                                             <constraint firstAttribute="height" constant="24" id="n0q-Pz-B58"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" title="Button" image="icon_ok"/>
+                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="xTk-pJ-Zkr">
-                                                <rect key="frame" x="0.0" y="247.5" width="220" height="24"/>
+                                                <rect key="frame" x="0.0" y="248" width="220" height="35"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="xD6-B8-biI">
-                                                        <rect key="frame" x="0.0" y="3" width="155" height="18"/>
+                                                        <rect key="frame" x="0.0" y="8.5" width="155" height="18"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="7" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ccr-bF-ZYk">
                                                                 <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
@@ -299,21 +366,26 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FMa-l3-ctW">
-                                                        <rect key="frame" x="196" y="0.0" width="24" height="24"/>
+                                                        <rect key="frame" x="196" y="5.5" width="24" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="24" id="XFt-nj-dFS"/>
                                                             <constraint firstAttribute="width" constant="24" id="dBT-qf-WMd"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" title="Button" image="icon_ok"/>
+                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="NT9-gC-HWN">
-                                                <rect key="frame" x="0.0" y="289" width="220" height="24"/>
+                                                <rect key="frame" x="0.0" y="283" width="220" height="35.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="llZ-x5-1Mk">
-                                                        <rect key="frame" x="0.0" y="3" width="155" height="18"/>
+                                                        <rect key="frame" x="0.0" y="9" width="155" height="18"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rxk-Lz-PTM">
                                                                 <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
@@ -331,7 +403,7 @@
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="深水测试" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q0C-Aa-Ocs">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="漏水测试" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q0C-Aa-Ocs">
                                                                 <rect key="frame" x="28" y="0.0" width="127" height="18"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -340,21 +412,26 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hn8-Vg-eH0">
-                                                        <rect key="frame" x="196" y="0.0" width="24" height="24"/>
+                                                        <rect key="frame" x="196" y="6" width="24" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="24" id="Fhr-xK-JPw"/>
                                                             <constraint firstAttribute="width" constant="24" id="hQU-Px-SbB"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" title="Button" image="icon_ok"/>
+                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="mzK-AU-RKY">
-                                                <rect key="frame" x="0.0" y="330" width="220" height="24"/>
+                                                <rect key="frame" x="0.0" y="318.5" width="220" height="35.5"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="WGh-51-5n0">
-                                                        <rect key="frame" x="0.0" y="3" width="155" height="18"/>
+                                                        <rect key="frame" x="0.0" y="9" width="155" height="18"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zL0-Yd-4IT">
                                                                 <rect key="frame" x="0.0" y="0.0" width="18" height="18"/>
@@ -381,15 +458,20 @@
                                                         </subviews>
                                                     </stackView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IW0-uO-Ff2">
-                                                        <rect key="frame" x="196" y="0.0" width="24" height="24"/>
+                                                        <rect key="frame" x="196" y="6" width="24" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="24" id="O0A-Yb-Q8c"/>
                                                             <constraint firstAttribute="height" constant="24" id="QVG-tr-pzH"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" title="Button" image="icon_ok"/>
+                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </stackView>
                                         </subviews>
                                         <constraints>
@@ -401,6 +483,8 @@
                                             <constraint firstAttribute="trailing" secondItem="v2k-uI-osa" secondAttribute="trailing" id="ITr-RI-ii7"/>
                                             <constraint firstAttribute="trailing" secondItem="NT9-gC-HWN" secondAttribute="trailing" id="JjL-UG-X6b"/>
                                             <constraint firstItem="v2k-uI-osa" firstAttribute="leading" secondItem="xB0-6b-4B7" secondAttribute="leading" id="May-sV-h07"/>
+                                            <constraint firstItem="tvW-Cf-s4l" firstAttribute="top" secondItem="xB0-6b-4B7" secondAttribute="top" id="NuE-DC-sEq"/>
+                                            <constraint firstItem="tvW-Cf-s4l" firstAttribute="leading" secondItem="xB0-6b-4B7" secondAttribute="leading" id="Oc9-Vc-Wdz"/>
                                             <constraint firstAttribute="trailing" secondItem="w6o-D9-IVs" secondAttribute="trailing" id="VDd-MG-515"/>
                                             <constraint firstAttribute="trailing" secondItem="xTk-pJ-Zkr" secondAttribute="trailing" id="Z9D-Sh-7HC"/>
                                             <constraint firstItem="5YN-Ka-3gV" firstAttribute="leading" secondItem="xB0-6b-4B7" secondAttribute="leading" id="cfx-ge-kIo"/>
@@ -410,6 +494,7 @@
                                             <constraint firstAttribute="trailing" secondItem="9vh-0J-pRZ" secondAttribute="trailing" id="hU1-F5-jf5"/>
                                             <constraint firstAttribute="trailing" secondItem="Qy9-Ti-ZpM" secondAttribute="trailing" id="lq2-tK-0hB"/>
                                             <constraint firstItem="9vh-0J-pRZ" firstAttribute="leading" secondItem="xB0-6b-4B7" secondAttribute="leading" id="niw-UA-95Y"/>
+                                            <constraint firstAttribute="trailing" secondItem="tvW-Cf-s4l" secondAttribute="trailing" id="npY-hI-jgM"/>
                                             <constraint firstItem="5SR-Vc-kvb" firstAttribute="leading" secondItem="xB0-6b-4B7" secondAttribute="leading" id="tk1-KK-7hS"/>
                                         </constraints>
                                     </stackView>
@@ -449,12 +534,22 @@
                     <connections>
                         <outlet property="bottomBtn" destination="iuN-fF-Vn2" id="PsY-sd-ZTw"/>
                         <outlet property="connectBtn" destination="mra-hs-FUx" id="8tJ-Pq-P4d"/>
-                        <outlet property="deepwaterBtn" destination="Hn8-Vg-eH0" id="KDe-J3-RbL"/>
+                        <outlet property="leakBtn" destination="Hn8-Vg-eH0" id="NqH-Sd-jQl"/>
                         <outlet property="leftBtn" destination="1Yv-Eu-xHG" id="gMz-Yj-97t"/>
                         <outlet property="rightBtn" destination="FMa-l3-ctW" id="f9T-8T-8q0"/>
                         <outlet property="sensorBtn" destination="scZ-mo-DRP" id="vgJ-66-LhL"/>
                         <outlet property="shutdownBtn" destination="IW0-uO-Ff2" id="OLz-S1-Zgx"/>
                         <outlet property="shutterBtn" destination="18G-W9-WKK" id="CQa-0Y-tOm"/>
+                        <outlet property="stackView0" destination="tvW-Cf-s4l" id="Btc-UP-R8Y"/>
+                        <outlet property="stackView1" destination="w6o-D9-IVs" id="nba-lI-jmc"/>
+                        <outlet property="stackView2" destination="5YN-Ka-3gV" id="CxM-TY-mmj"/>
+                        <outlet property="stackView3" destination="v2k-uI-osa" id="abG-Gj-Jeb"/>
+                        <outlet property="stackView4" destination="9vh-0J-pRZ" id="eZp-Zo-nQ3"/>
+                        <outlet property="stackView5" destination="Qy9-Ti-ZpM" id="maS-wP-QwU"/>
+                        <outlet property="stackView6" destination="5SR-Vc-kvb" id="6eZ-n5-rSa"/>
+                        <outlet property="stackView7" destination="xTk-pJ-Zkr" id="DTt-m7-kr1"/>
+                        <outlet property="stackView8" destination="NT9-gC-HWN" id="RXP-Vm-ur7"/>
+                        <outlet property="stackView9" destination="mzK-AU-RKY" id="az2-eX-jTo"/>
                         <outlet property="topBtn" destination="Org-vN-YpG" id="LF2-U6-yoS"/>
                     </connections>
                 </viewController>

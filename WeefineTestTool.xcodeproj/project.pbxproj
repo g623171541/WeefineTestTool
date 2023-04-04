@@ -206,8 +206,8 @@
 		03E19F7C29D5871B00EE47D5 /* FMDB */ = {
 			isa = PBXGroup;
 			children = (
-				03E19F7D29D5871B00EE47D5 /* DataBaseManager.m */,
 				03E19F7E29D5871B00EE47D5 /* DataBaseManager.h */,
+				03E19F7D29D5871B00EE47D5 /* DataBaseManager.m */,
 			);
 			path = FMDB;
 			sourceTree = "<group>";
@@ -497,11 +497,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A39Q776AMJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WeefineTestTool/Main/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "设备测试";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -526,11 +528,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A39Q776AMJ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WeefineTestTool/Main/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "设备测试";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

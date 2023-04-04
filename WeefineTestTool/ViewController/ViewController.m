@@ -20,20 +20,30 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 @interface ViewController ()
 /// 当前第几步骤
 @property (nonatomic, assign) NSInteger step;
+/// 步骤view数组，用于改变背景颜色
+@property (nonatomic, strong) NSArray *stackViewArray;
+/// 设备测试模型
+@property (nonatomic, strong) DeviceInfoModel *deviceInfoModel;
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.step = 1;
     
+    // 初始化数据
+    [self initData];
     // 加载蓝牙模块
     [self loadBluetoothManager];
     // 添加观察者
     [self addObserver];
 }
 
+/// 初始化数据
+- (void)initData {
+    self.step = 0;
+    self.stackViewArray = @[self.stackView0, self.stackView1, self.stackView2, self.stackView3, self.stackView4, self.stackView5, self.stackView6, self.stackView7, self.stackView8, self.stackView9];
+}
 
 
 #pragma mark - 载入蓝牙管理模块
@@ -107,9 +117,15 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 
 #pragma mark - 添加观察者
 - (void)addObserver {
+    @weakify(self);
     // 根据步骤切换UI
     [RACObserve(self, step) subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
         NSLog(@"当前第几步：%@", x);
+        for (int i=0; i<self.stackViewArray.count; i++) {
+            UIStackView *stackView = [self.stackViewArray objectAtIndex:i];
+            stackView.backgroundColor = [x intValue] == i ? kColorBlue1 : UIColor.whiteColor;
+        }
     }];
 }
 

@@ -66,10 +66,8 @@ isPhoneX = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bo
 
 #define kColorRed1              [UIColor colorWithHex:@"FF0000"]
 #define kColorRed2              [UIColor colorWithHex:@"FF6464"]
-// 字体颜色蓝色
-#define kColorBlue1              [UIColor colorWithHex:@"00C3FF"]
-// 背景色蓝色
-#define kColorBlue2              [UIColor colorWithHex:@"37ADDD"]
+// 蓝色
+#define kColorBlue1              [UIColor colorWithHex:@"7275FF"]
 
 #pragma mark - 字符串
 

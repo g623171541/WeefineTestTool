@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DeviceInfoModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,16 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *)getAllTableNames;
 
 /// 表中插入单条数据
+/// @param model 测试结果模型
 /// @param tableName 表名
-/// @param depth 深度
-/// @param temperature 温度
-/// @param time 时间（格式：2021-03-04 19:04:38）
-- (void)insert:(NSString *)tableName depth:(float )depth temperature:(float )temperature time:(NSString *)time;
-
-/// 表中插入所所有数据（事务操作）
-/// @param dataArr 数据源
-/// @param tableName 表名
-- (void)insertAllData:(NSString *)tableName data:(NSArray *)dataArr;
+- (void)insertModel:(DeviceInfoModel *)model tableName:(NSString *)tableName;
 
 /// 获取表中的数据
 /// @param tableName 表名

@@ -11,6 +11,19 @@
 @interface ViewController : UIViewController
 
 #pragma mark - 左侧检测状态按钮
+
+@property (weak, nonatomic) IBOutlet UIStackView *stackView0;
+@property (weak, nonatomic) IBOutlet UIStackView *stackView1;
+@property (weak, nonatomic) IBOutlet UIStackView *stackView2;
+@property (weak, nonatomic) IBOutlet UIStackView *stackView3;
+@property (weak, nonatomic) IBOutlet UIStackView *stackView4;
+@property (weak, nonatomic) IBOutlet UIStackView *stackView5;
+@property (weak, nonatomic) IBOutlet UIStackView *stackView6;
+@property (weak, nonatomic) IBOutlet UIStackView *stackView7;
+@property (weak, nonatomic) IBOutlet UIStackView *stackView8;
+@property (weak, nonatomic) IBOutlet UIStackView *stackView9;
+
+
 /// 连接测试
 @property (weak, nonatomic) IBOutlet UIButton *connectBtn;
 /// 传感器测试
@@ -25,8 +38,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *leftBtn;
 /// 右按键测试
 @property (weak, nonatomic) IBOutlet UIButton *rightBtn;
-/// 深水测试
-@property (weak, nonatomic) IBOutlet UIButton *deepwaterBtn;
+/// 漏水测试
+@property (weak, nonatomic) IBOutlet UIButton *leakBtn;
 /// 关机
 @property (weak, nonatomic) IBOutlet UIButton *shutdownBtn;
 
