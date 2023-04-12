@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0369890C29E653FC0090A5CB /* CBPeripheral+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 0369890B29E653FC0090A5CB /* CBPeripheral+Category.m */; };
+		0369891129E6559A0090A5CB /* NSString+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0369890D29E6559A0090A5CB /* NSString+Utils.m */; };
+		0369891229E6559A0090A5CB /* NSData+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0369891029E6559A0090A5CB /* NSData+Utils.m */; };
 		03E19F3E29D55CBE00EE47D5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F3D29D55CBE00EE47D5 /* AppDelegate.m */; };
 		03E19F4429D55CBE00EE47D5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F4329D55CBE00EE47D5 /* ViewController.m */; };
 		03E19F4729D55CBE00EE47D5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03E19F4529D55CBE00EE47D5 /* Main.storyboard */; };
@@ -18,7 +21,6 @@
 		03E19F7129D5709200EE47D5 /* UIColor+FFCSColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F5E29D5709200EE47D5 /* UIColor+FFCSColor.m */; };
 		03E19F7229D5709200EE47D5 /* UIView+GXDXib.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F6029D5709200EE47D5 /* UIView+GXDXib.m */; };
 		03E19F7329D5709200EE47D5 /* UIImage+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F6129D5709200EE47D5 /* UIImage+Category.m */; };
-		03E19F7429D5709200EE47D5 /* NSString+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F6229D5709200EE47D5 /* NSString+Category.m */; };
 		03E19F7629D5709200EE47D5 /* PDFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F6B29D5709200EE47D5 /* PDFileManager.m */; };
 		03E19F7729D5709200EE47D5 /* MAUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F6D29D5709200EE47D5 /* MAUserDefaults.m */; };
 		03E19F7F29D5871B00EE47D5 /* DataBaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E19F7D29D5871B00EE47D5 /* DataBaseManager.m */; };
@@ -27,6 +29,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0369890A29E653FC0090A5CB /* CBPeripheral+Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CBPeripheral+Category.h"; sourceTree = "<group>"; };
+		0369890B29E653FC0090A5CB /* CBPeripheral+Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CBPeripheral+Category.m"; sourceTree = "<group>"; };
+		0369890D29E6559A0090A5CB /* NSString+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Utils.m"; sourceTree = "<group>"; };
+		0369890E29E6559A0090A5CB /* NSString+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Utils.h"; sourceTree = "<group>"; };
+		0369890F29E6559A0090A5CB /* NSData+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Utils.h"; sourceTree = "<group>"; };
+		0369891029E6559A0090A5CB /* NSData+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Utils.m"; sourceTree = "<group>"; };
 		03E19F3929D55CBE00EE47D5 /* WeefineTestTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeefineTestTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03E19F3C29D55CBE00EE47D5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		03E19F3D29D55CBE00EE47D5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -42,10 +50,8 @@
 		03E19F5B29D5709200EE47D5 /* PDBluetoothManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDBluetoothManager.m; sourceTree = "<group>"; };
 		03E19F5C29D5709200EE47D5 /* PDBluetoothManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDBluetoothManager.h; sourceTree = "<group>"; };
 		03E19F5E29D5709200EE47D5 /* UIColor+FFCSColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+FFCSColor.m"; sourceTree = "<group>"; };
-		03E19F5F29D5709200EE47D5 /* NSString+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Category.h"; sourceTree = "<group>"; };
 		03E19F6029D5709200EE47D5 /* UIView+GXDXib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+GXDXib.m"; sourceTree = "<group>"; };
 		03E19F6129D5709200EE47D5 /* UIImage+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Category.m"; sourceTree = "<group>"; };
-		03E19F6229D5709200EE47D5 /* NSString+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Category.m"; sourceTree = "<group>"; };
 		03E19F6329D5709200EE47D5 /* UIColor+FFCSColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+FFCSColor.h"; sourceTree = "<group>"; };
 		03E19F6429D5709200EE47D5 /* UIImage+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Category.h"; sourceTree = "<group>"; };
 		03E19F6529D5709200EE47D5 /* UIView+GXDXib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+GXDXib.h"; sourceTree = "<group>"; };
@@ -154,14 +160,18 @@
 		03E19F5D29D5709200EE47D5 /* Category */ = {
 			isa = PBXGroup;
 			children = (
-				03E19F5F29D5709200EE47D5 /* NSString+Category.h */,
-				03E19F6229D5709200EE47D5 /* NSString+Category.m */,
+				0369890F29E6559A0090A5CB /* NSData+Utils.h */,
+				0369891029E6559A0090A5CB /* NSData+Utils.m */,
+				0369890E29E6559A0090A5CB /* NSString+Utils.h */,
+				0369890D29E6559A0090A5CB /* NSString+Utils.m */,
 				03E19F6529D5709200EE47D5 /* UIView+GXDXib.h */,
 				03E19F6029D5709200EE47D5 /* UIView+GXDXib.m */,
 				03E19F6429D5709200EE47D5 /* UIImage+Category.h */,
 				03E19F6129D5709200EE47D5 /* UIImage+Category.m */,
 				03E19F6329D5709200EE47D5 /* UIColor+FFCSColor.h */,
 				03E19F5E29D5709200EE47D5 /* UIColor+FFCSColor.m */,
+				0369890A29E653FC0090A5CB /* CBPeripheral+Category.h */,
+				0369890B29E653FC0090A5CB /* CBPeripheral+Category.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -343,14 +353,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0369891229E6559A0090A5CB /* NSData+Utils.m in Sources */,
 				03E19F7129D5709200EE47D5 /* UIColor+FFCSColor.m in Sources */,
 				03E19F6F29D5709200EE47D5 /* MBProgressHUD+GXD.m in Sources */,
 				03E19F8329D6EA2E00EE47D5 /* DeviceInfoModel.m in Sources */,
 				03E19F4429D55CBE00EE47D5 /* ViewController.m in Sources */,
 				03E19F7729D5709200EE47D5 /* MAUserDefaults.m in Sources */,
-				03E19F7429D5709200EE47D5 /* NSString+Category.m in Sources */,
 				03E19F7629D5709200EE47D5 /* PDFileManager.m in Sources */,
+				0369891129E6559A0090A5CB /* NSString+Utils.m in Sources */,
 				03E19F7029D5709200EE47D5 /* PDBluetoothManager.m in Sources */,
+				0369890C29E653FC0090A5CB /* CBPeripheral+Category.m in Sources */,
 				03E19F7229D5709200EE47D5 /* UIView+GXDXib.m in Sources */,
 				03E19F7F29D5871B00EE47D5 /* DataBaseManager.m in Sources */,
 				03E19F7329D5709200EE47D5 /* UIImage+Category.m in Sources */,
@@ -501,6 +513,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A39Q776AMJ;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/WeefineTestTool/Main/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WeefineTestTool/Main/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "设备测试";
@@ -532,6 +545,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = A39Q776AMJ;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/WeefineTestTool/Main/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WeefineTestTool/Main/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "设备测试";

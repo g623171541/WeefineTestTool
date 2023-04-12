@@ -22,5 +22,8 @@
 #import "DataBaseManager.h"
 #import "PDFileManager.h"
 #import "DeviceInfoModel.h"
+#import "CBPeripheral+Category.h"
+#import "NSData+Utils.h"
+#import "NSString+Utils.h"
 
 #endif /* PrefixHeader_pch */

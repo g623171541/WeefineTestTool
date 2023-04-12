@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_1" orientation="landscape" appearance="dark"/>
+    <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
@@ -515,7 +515,36 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hVL-Ti-Rx7" userLabel="right View">
                                 <rect key="frame" x="265" y="10" width="621" height="394"/>
+                                <subviews>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="m5W-aU-cH1">
+                                        <rect key="frame" x="0.0" y="0.0" width="621" height="394"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="dataSource" destination="BYZ-38-t0r" id="m3C-or-CfR"/>
+                                            <outlet property="delegate" destination="BYZ-38-t0r" id="b1T-B7-MEE"/>
+                                        </connections>
+                                    </tableView>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="504-lB-Zla" userLabel="连接测试">
+                                        <rect key="frame" x="0.0" y="0.0" width="621" height="394"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="504-lB-Zla" firstAttribute="leading" secondItem="hVL-Ti-Rx7" secondAttribute="leading" id="QNs-w7-IiW"/>
+                                    <constraint firstAttribute="bottom" secondItem="m5W-aU-cH1" secondAttribute="bottom" id="RUi-HV-MdW"/>
+                                    <constraint firstAttribute="trailing" secondItem="504-lB-Zla" secondAttribute="trailing" id="TLA-1x-Nqz"/>
+                                    <constraint firstItem="504-lB-Zla" firstAttribute="top" secondItem="hVL-Ti-Rx7" secondAttribute="top" id="jTf-oZ-yYh"/>
+                                    <constraint firstItem="m5W-aU-cH1" firstAttribute="leading" secondItem="hVL-Ti-Rx7" secondAttribute="leading" id="rCX-s5-Eoc"/>
+                                    <constraint firstItem="m5W-aU-cH1" firstAttribute="top" secondItem="hVL-Ti-Rx7" secondAttribute="top" id="sTB-d4-B0Z"/>
+                                    <constraint firstAttribute="trailing" secondItem="m5W-aU-cH1" secondAttribute="trailing" id="xdg-bo-h7q"/>
+                                    <constraint firstAttribute="bottom" secondItem="504-lB-Zla" secondAttribute="bottom" id="y1y-vo-yOn"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -550,6 +579,7 @@
                         <outlet property="stackView7" destination="xTk-pJ-Zkr" id="DTt-m7-kr1"/>
                         <outlet property="stackView8" destination="NT9-gC-HWN" id="RXP-Vm-ur7"/>
                         <outlet property="stackView9" destination="mzK-AU-RKY" id="az2-eX-jTo"/>
+                        <outlet property="tableView" destination="m5W-aU-cH1" id="VBo-2r-cjM"/>
                         <outlet property="topBtn" destination="Org-vN-YpG" id="LF2-U6-yoS"/>
                     </connections>
                 </viewController>

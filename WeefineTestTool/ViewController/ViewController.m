@@ -24,6 +24,8 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 @property (nonatomic, strong) NSArray *stackViewArray;
 /// 设备测试模型
 @property (nonatomic, strong) DeviceInfoModel *deviceInfoModel;
+/// 蓝牙外设设备列表
+@property (nonatomic, strong) NSMutableArray <CBPeripheral *>*peripheralArrM;
 @end
 
 @implementation ViewController
@@ -45,6 +47,35 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     self.stackViewArray = @[self.stackView0, self.stackView1, self.stackView2, self.stackView3, self.stackView4, self.stackView5, self.stackView6, self.stackView7, self.stackView8, self.stackView9];
 }
 
+/// 确实发现外设
+/// - Parameter peripheralArr: 外设数组
+- (void)didFindPeripherals:(NSArray <CBPeripheral *>*)peripheralArr {
+    BOOL isEqual = NO;
+    // 创建俩新的数组
+    NSMutableArray *oldArr = [NSMutableArray arrayWithArray:self.peripheralArrM];
+    NSMutableArray *newArr = [NSMutableArray arrayWithArray:peripheralArr];
+    [oldArr sortUsingComparator:^NSComparisonResult(id obj1, id obj2){
+        return obj1 > obj2;
+    }];
+    [newArr sortUsingComparator:^NSComparisonResult(id obj1, id obj2){
+        return obj1 > obj2;
+    }];
+    
+    if (newArr.count == oldArr.count) {
+        isEqual = YES;
+        for (int i = 0; i < oldArr.count; i++) {
+            if (![oldArr[i] isEqual:newArr[i]]) {
+                isEqual = NO;
+                break;
+            }
+        }
+    }
+    if (!isEqual) {
+        self.peripheralArrM = [NSMutableArray arrayWithArray:peripheralArr];
+        [self.tableView reloadData];
+    }
+}
+
 
 #pragma mark - 载入蓝牙管理模块
 - (void)loadBluetoothManager {
@@ -54,8 +85,9 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     };
     
     // !!!: 搜索到新外围回调
-    [PDBluetoothManager shareInstance].discoverPeripheral = ^(NSArray *peripheralArr) {
-        
+    [PDBluetoothManager shareInstance].discoverPeripheral = ^(NSArray <CBPeripheral *>*peripheralArr) {
+        NSLog(@"外设：%@", peripheralArr);
+        [self didFindPeripherals:peripheralArr];
     };
     
     // !!!: 连接成功
@@ -127,6 +159,44 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
             stackView.backgroundColor = [x intValue] == i ? kColorBlue1 : UIColor.whiteColor;
         }
     }];
+}
+
+#pragma mark - UITableViewDelegate
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.peripheralArrM.count;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *identifier = @"peripheralTableViewCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+    }
+    cell.backgroundColor = [UIColor clearColor];
+    cell.textLabel.text = [self.peripheralArrM[indexPath.row] mac];
+    cell.textLabel.textColor = UIColor.systemBlueColor;
+    return cell;
+}
+- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    return nil;
+}
+- (nullable UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    return nil;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 40.0f;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [[PDBluetoothManager shareInstance] stopScan];
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 0.001f;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0.001f;
 }
 
 

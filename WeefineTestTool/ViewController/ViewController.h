@@ -6,9 +6,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PrefixHeader.pch"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 #pragma mark - 左侧检测状态按钮
 
@@ -43,6 +42,9 @@
 /// 关机
 @property (weak, nonatomic) IBOutlet UIButton *shutdownBtn;
 
+#pragma mark - 右侧
+/// 蓝牙设备列表
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 

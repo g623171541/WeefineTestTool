@@ -10,6 +10,10 @@
 @interface PDBluetoothManager ()
 /// 需要过滤的蓝牙名字
 @property (nonatomic, strong) NSArray *peripheralNameArr;
+/// 定时器回调蓝牙外设
+@property (nonatomic, strong) NSTimer *peripheralTimer;
+/// 蓝牙广播数据长度
+@property (nonatomic, assign) NSInteger advertisementDataLength;
 @end
 
 @implementation PDBluetoothManager
@@ -67,47 +71,26 @@ static dispatch_once_t token = 0;
         // 初始化数组
         self.myPeripherals = @[].mutableCopy;
         self.timerMyPeripherals = @[].mutableCopy;
-        // 开启定时器
-        self.refishTimer = [NSTimer scheduledTimerWithTimeInterval:2.f target:self selector:@selector(refishTimerAction:) userInfo:nil repeats:YES];
-        self.refishTimerState = YES;
+        // 定时器回调蓝牙外设
+        self.peripheralTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(scanPeripheralsCallBack) userInfo:nil repeats:YES];
+        self.advertisementDataLength = 20;
     }
     
     return self;
 }
 
-#pragma mark - 定时器方法（每2秒检查一下）
-- (void)refishTimerAction:(NSTimer *)refishTimer {
-    if (!self.isConnectPeripheral && self.peripheral) {
-        [self.centralManager connectPeripheral:self.peripheral options:nil];
-    }
-    self.myPeripherals = self.timerMyPeripherals;
-    self.timerMyPeripherals = @[].mutableCopy;
+/// 定时1秒回调一次发现的蓝牙外设
+- (void)scanPeripheralsCallBack {
     if (self.discoverPeripheral) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.discoverPeripheral(self.myPeripherals);
         });
     }
-    
-    // 检查已连接蓝牙的设备
-    [self checkAlreadyConnectBluetooth];
 }
-
-/// 检查手机是否已连接蓝牙
-- (void)checkAlreadyConnectBluetooth {
-    NSArray *connectedArr = [self.centralManager retrieveConnectedPeripheralsWithServices:@[
-        [CBUUID UUIDWithString:DeviceInformationServiceUUIDString],
-        [CBUUID UUIDWithString:ButtonServiceUUIDString],
-        [CBUUID UUIDWithString:SensorServiceUUIDString]
-    ]];
-    // NSLog(@"发现已连接的设备：%@", connectedArr);
-    for (CBPeripheral *peripheral in connectedArr) {
-        if ([self.peripheralNameArr containsObject:peripheral.name]) {
-            CBPeripheral *peripheral = connectedArr.firstObject;
-            // 连接到指定外围
-            [[PDBluetoothManager shareInstance].centralManager connectPeripheral:peripheral options:nil];
-            self.peripheral = peripheral;
-        }
-    }
+- (void)stopScan {
+    [self.centralManager stopScan];
+    [self.peripheralTimer setFireDate:[NSDate distantFuture]];
+    self.peripheralTimer = nil;
 }
 
 #pragma mark - 清除缓存数据
@@ -156,15 +139,27 @@ static dispatch_once_t token = 0;
 
 #pragma mark 搜索到外围
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *, id> *)advertisementData RSSI:(NSNumber *)RSSI {
-    @synchronized(self) {
-        if (self.refishTimerState == NO) {
-            [self.refishTimer setFireDate:[NSDate distantPast]];
-            self.refishTimerState = YES;
-        }
-    }
-
     // 我的设备
     if ([self.peripheralNameArr containsObject:peripheral.name]) {
+        NSData *advData = [advertisementData valueForKey:@"kCBAdvDataManufacturerData"];
+        if (advData.length >= self.advertisementDataLength) {
+            // 厂商 2Bytes
+            peripheral.manufacturer = [[advData subdataWithRange:NSMakeRange(0, 2)] convertToHexStr];
+            // mac 6Bytes
+            peripheral.mac = [[advData subdataWithRange:NSMakeRange(2, 6)] convertToHexStr];
+            // 设备大类 2Bytes
+            peripheral.deviceType = @([[advData subdataWithRange:NSMakeRange(8, 2)] convertToInt]);
+            // 设备小类 1Byte
+            peripheral.deviceSubType = @([[advData subdataWithRange:NSMakeRange(10, 1)] convertToInt]);
+            // 产品ID 2Bytes
+            peripheral.productId = @([[advData subdataWithRange:NSMakeRange(11, 2)] convertToInt]);
+            // 状态 1Byte bit0：表示是否已被绑定，0：未绑定，1：已被绑定
+            peripheral.alreadyBind = @([[advData subdataWithRange:NSMakeRange(13, 1)] convertToInt] & 0x1);
+            // 状态 1Byte bit1：表示是否处于可配网状态，0：不可配网，1：可被配网
+            peripheral.canConnectNetwork = @([[advData subdataWithRange:NSMakeRange(13, 1)] convertToInt] & 0x2);
+            peripheral.rssi = RSSI;
+        }
+        
         if (![self.myPeripherals containsObject:peripheral]) {
             // 添加到我的外围设备显示数组
             [self.myPeripherals addObject:peripheral];
@@ -173,11 +168,6 @@ static dispatch_once_t token = 0;
             // 添加到我的外围数组
             [self.timerMyPeripherals addObject:peripheral];
         }
-    }
-    if (self.discoverPeripheral) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.discoverPeripheral(self.myPeripherals);
-        });
     }
 }
 
@@ -195,9 +185,6 @@ static dispatch_once_t token = 0;
     
     // 停止扫描
     [self.centralManager stopScan];
-    // 停止定时器
-    [self.refishTimer setFireDate:[NSDate distantFuture]];
-    self.refishTimerState = NO;
     // 设置外围委托代理
     self.peripheral = peripheral;
     [self.peripheral setDelegate:self];
@@ -215,22 +202,12 @@ static dispatch_once_t token = 0;
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(nullable NSError *)error {
     self.isConnectPeripheral = NO;
     [self cleanData];
-    @synchronized(self) {
-        if (self.refishTimerState == NO) {
-            [self.refishTimer setFireDate:[NSDate distantPast]];
-            self.refishTimerState = YES;
-        }
-    }
     
     if (self.didDisconnectPeripheral) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.didDisconnectPeripheral(peripheral.name);
         });
     }
-    
-    //扫描外围 第一个参数为nil表示扫任何外围
-    //    [self.centralManager scanForPeripheralsWithServices:nil
-    //                                                options:@{CBCentralManagerScanOptionAllowDuplicatesKey:@YES}];
     NSLog(@"外围连接断开 identifier:%@  名称:%@",[peripheral.identifier UUIDString],peripheral.name);
 }
 
