@@ -26,11 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 用于屏蔽刚连接后硬件的第一次按键数据
 @property (nonatomic, assign) BOOL isFirstActionEvent;
 
-/// 硬件信息
-@property (nonatomic, strong) NSString *hardware;
-/// 固件信息
-@property (nonatomic, strong) NSString *firmware;
-
 #pragma mark - Block回调
 /// 中央管理状态改变
 @property (nonatomic, copy) void(^centralManagerUpdateState)(NSString *message);
@@ -40,18 +35,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void(^didDisconnectPeripheral)(NSString *peripheralName);
 /// 搜索到新外围
 @property (nonatomic, copy) void(^discoverPeripheral)(NSArray *peripheralArr);
-/// 设备信息
-@property (nonatomic, copy) void(^deviceInformationCharacteristic)(NSString *value);
+/// 制造商信息
+@property (nonatomic, copy) void(^manufacturerInformationCharacteristic)(NSString *manufacturer);
 /// 电池信息
 @property (nonatomic, copy) void(^batteryCharacteristic)(NSInteger battery);
 /// 当前点击按键
 @property (nonatomic, copy) void(^buttonCharacteristic)(NSString *);
 /// 传感器信息
 @property (nonatomic, copy) void(^sensorCharacteristic)(float, float);
-/// 硬件信息
-@property (nonatomic, copy) void(^hardwareInformationCharacteristic)(NSString *);
-/// 固件信息
-@property (nonatomic, copy) void(^firmwareInformationCharacteristic)(NSString *);
+/// 硬件版本
+@property (nonatomic, copy) void(^hardwareInformationCharacteristic)(NSString *hardware);
+/// 软件版本
+@property (nonatomic, copy) void(^softwareInformationCharacteristic)(NSString *software);
+/// 固件版本
+@property (nonatomic, copy) void(^firmwareInformationCharacteristic)(NSString *firmware);
 
 + (instancetype)shareInstance;
 

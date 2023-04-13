@@ -12,36 +12,34 @@
 @property (nonatomic, strong) NSArray *peripheralNameArr;
 /// 定时器回调蓝牙外设
 @property (nonatomic, strong) NSTimer *peripheralTimer;
-/// 蓝牙广播数据长度
+/// 蓝牙广播数据长度，广播的数据是6字节的MAC地址
 @property (nonatomic, assign) NSInteger advertisementDataLength;
 @end
 
 @implementation PDBluetoothManager
-
+// 服务
 static NSString * const hrsServiceUUIDString = @"0000180D-0000-1000-8000-00805F9B34FB";
 static NSString * const hrsSensorLocationCharacteristicUUIDString = @"00002A38-0000-1000-8000-00805F9B34FB";
 
-// 设备信息
+// 设备信息的服务
 static NSString * const DeviceInformationServiceUUIDString = @"180A";
-static NSString * const DeviceInformationCharacteristicUUIDString = @"2A29";
-
-//硬件版本
-static NSString * const HardwareInformationServiceUUIDString = @"180A";
+// 制造商特征UUID
+static NSString * const ManufacturerInformationCharacteristicUUIDString = @"2A29";
+// 硬件版本
 static NSString * const HardwareInformationCharacteristicUUIDString = @"2A27";
-
-//固件信息
-static NSString * const FirmwareInformationServiceUUIDString = @"180A";
+// 固件信息
 static NSString * const FirmwareInformationCharacteristicUUIDString = @"2A26";
+// 软件版本特征
+static NSString * const SoftwareInformationCharacteristicUUIDString = @"2A19";
 
-//电池服务
+// 电池服务
 static NSString * const BatteryServiceUUIDString = @"180F";
 static NSString * const BatteryCharacteristicUUIDString = @"2A19";
 
-//按键服务
+// 按键服务
 static NSString * const ButtonServiceUUIDString = @"00001523-1212-EFDE-1523-785FEABCD123";
 static NSString * const ButtonCharacteristicUUIDString = @"00001524-1212-EFDE-1523-785FEABCD123";
-
-//传感器服务
+// 传感器服务
 static NSString * const SensorServiceUUIDString = @"00001623-1212-EFDE-1523-785FEABCD123";
 static NSString * const SensorCharacteristicUUIDString = @"00001625-1212-EFDE-1523-785FEABCD123";
 
@@ -73,7 +71,7 @@ static dispatch_once_t token = 0;
         self.timerMyPeripherals = @[].mutableCopy;
         // 定时器回调蓝牙外设
         self.peripheralTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(scanPeripheralsCallBack) userInfo:nil repeats:YES];
-        self.advertisementDataLength = 20;
+        self.advertisementDataLength = 6;
     }
     
     return self;
@@ -143,21 +141,8 @@ static dispatch_once_t token = 0;
     if ([self.peripheralNameArr containsObject:peripheral.name]) {
         NSData *advData = [advertisementData valueForKey:@"kCBAdvDataManufacturerData"];
         if (advData.length >= self.advertisementDataLength) {
-            // 厂商 2Bytes
-            peripheral.manufacturer = [[advData subdataWithRange:NSMakeRange(0, 2)] convertToHexStr];
-            // mac 6Bytes
-            peripheral.mac = [[advData subdataWithRange:NSMakeRange(2, 6)] convertToHexStr];
-            // 设备大类 2Bytes
-            peripheral.deviceType = @([[advData subdataWithRange:NSMakeRange(8, 2)] convertToInt]);
-            // 设备小类 1Byte
-            peripheral.deviceSubType = @([[advData subdataWithRange:NSMakeRange(10, 1)] convertToInt]);
-            // 产品ID 2Bytes
-            peripheral.productId = @([[advData subdataWithRange:NSMakeRange(11, 2)] convertToInt]);
-            // 状态 1Byte bit0：表示是否已被绑定，0：未绑定，1：已被绑定
-            peripheral.alreadyBind = @([[advData subdataWithRange:NSMakeRange(13, 1)] convertToInt] & 0x1);
-            // 状态 1Byte bit1：表示是否处于可配网状态，0：不可配网，1：可被配网
-            peripheral.canConnectNetwork = @([[advData subdataWithRange:NSMakeRange(13, 1)] convertToInt] & 0x2);
-            peripheral.rssi = RSSI;
+            // MAC 6Bytes
+            peripheral.mac = [[advData subdataWithRange:NSMakeRange(0, 6)] convertToHexStr];
         }
         
         if (![self.myPeripherals containsObject:peripheral]) {
@@ -233,7 +218,7 @@ static dispatch_once_t token = 0;
     }
     
     for (CBCharacteristic *characteristic in service.characteristics) {
-        if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:DeviceInformationCharacteristicUUIDString]]) {
+        if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ManufacturerInformationCharacteristicUUIDString]]) {
             // 读取设备信息
             [peripheral readValueForCharacteristic:characteristic];
         } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:BatteryCharacteristicUUIDString]]) {
@@ -263,30 +248,25 @@ static dispatch_once_t token = 0;
         return;
     }
         
-    // 设备信息特征值
-    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:DeviceInformationCharacteristicUUIDString]]) {
-        if (self.deviceInformationCharacteristic) {
+    // 制造商特征值
+    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ManufacturerInformationCharacteristicUUIDString]]) {
+        if (self.manufacturerInformationCharacteristic) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.deviceInformationCharacteristic([[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding]);
+                NSString *manufacturer = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
+                self.manufacturerInformationCharacteristic(manufacturer);
             });
         }
-        NSLog(@"制造商:%@",[[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding]);
         return;
     }
     
     // 电池信息特征值
     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:BatteryCharacteristicUUIDString]]) {
-        // 暂时不需要更新电池
-//        if (_batteryCharacteristic) {
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                u_long battery = strtoul([[NSString getStringFromHexByte:(Byte *)characteristic.value.bytes length:(int)characteristic.value.length] UTF8String], 0, 16);
-//                self.batteryCharacteristic(battery);
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                    // 为了让外设每秒发一次电量信息
-//                    [self.peripheral setNotifyValue:YES forCharacteristic:characteristic];
-//                });
-//            });
-//        }
+        if (_batteryCharacteristic) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                u_long battery = strtoul([[NSString getStringFromHexByte:(Byte *)characteristic.value.bytes length:(int)characteristic.value.length] UTF8String], 0, 16);
+                self.batteryCharacteristic(battery);
+            });
+        }
         return;
     }
     
@@ -294,7 +274,7 @@ static dispatch_once_t token = 0;
     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ButtonCharacteristicUUIDString]]) {
         // 潜水设备静态按钮的按键值
         NSString *staticBtnTagStr = [NSString getStringFromHexByte:(Byte *)characteristic.value.bytes length:(int)characteristic.value.length].uppercaseString;
-        // NSLog(@"当前点击按键:%@",staticBtnTagStr);
+        NSLog(@"当前点击按键:%@",staticBtnTagStr);
         if (self.buttonCharacteristic) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.buttonCharacteristic(staticBtnTagStr);
@@ -321,7 +301,6 @@ static dispatch_once_t token = 0;
     // 硬件信息特征值
     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:HardwareInformationCharacteristicUUIDString]]) {
         NSString *hardware = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
-        self.hardware = hardware;
         if (self.hardwareInformationCharacteristic) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.hardwareInformationCharacteristic(hardware);
@@ -330,10 +309,20 @@ static dispatch_once_t token = 0;
         return;
     }
     
+    // 软件信息特征值
+    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:SoftwareInformationCharacteristicUUIDString]]) {
+        NSString *software = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
+        if (self.softwareInformationCharacteristic) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.softwareInformationCharacteristic(software);
+            });
+        }
+        return;
+    }
+    
     // 固件信息特征值
     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:FirmwareInformationCharacteristicUUIDString]]) {
         NSString *firmware = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
-        self.firmware = firmware;
         if (self.firmwareInformationCharacteristic) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.firmwareInformationCharacteristic(firmware);

@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *software;
 /// 硬件版本
 @property (nonatomic, strong) NSString *hardware;
+/// 固件版本
+@property (nonatomic, strong) NSString *firmware;
 /// 产品型号
 @property (nonatomic, strong) NSString *product;
 

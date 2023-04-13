@@ -46,7 +46,7 @@
     if ([_db open]) {
         if (![_db tableExists:tableName]) {
             // 创建表
-            NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ ('ID' INTEGER PRIMARY KEY AUTOINCREMENT, 'mac' TEXT NOT NULL, 'name' TEXT NOT NULL, 'software' TEXT NOT NULL, 'hardware' TEXT NOT NULL, 'product' TEXT NOT NULL, 'sensor' INTEGER NOT NULL, 'shutter' INTEGER NOT NULL, 'top' INTEGER NOT NULL, 'bottom' INTEGER NOT NULL, 'left' INTEGER NOT NULL, 'right' INTEGER NOT NULL, 'leak' INTEGER NOT NULL, 'result' INTEGER NOT NULL, 'time' TEXT NOT NULL)", tableName];
+            NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ ('ID' INTEGER PRIMARY KEY AUTOINCREMENT, 'mac' TEXT NOT NULL, 'name' TEXT NOT NULL, 'software' TEXT NOT NULL, 'hardware' TEXT NOT NULL, 'firmware' TEXT NOT NULL, 'product' TEXT NOT NULL, 'sensor' INTEGER NOT NULL, 'shutter' INTEGER NOT NULL, 'top' INTEGER NOT NULL, 'bottom' INTEGER NOT NULL, 'left' INTEGER NOT NULL, 'right' INTEGER NOT NULL, 'leak' INTEGER NOT NULL, 'result' INTEGER NOT NULL, 'time' TEXT NOT NULL)", tableName];
             [_db executeUpdate:sql];
         }else{
             NSLog(@"已经有表了，不需要重新添加");
@@ -104,8 +104,8 @@
     //    BOOL result = [db executeUpdateWithFormat:@"insert into 't_student' (ID,name,phone,score) values(%d,%@,%@,%d)",112,@"x3",@"13",43];
     //3.
     if ([_db open]) {
-        NSString *sqStr = [NSString stringWithFormat:@"insert into '%@' (mac, name, software, hardware, product, sensor, shutter, top, bottom, left, right, leak, result, time) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)", tableName];
-        [_db executeUpdate:sqStr withArgumentsInArray:@[model.mac, model.name, model.software, model.hardware, model.product, @(model.sensor), @(model.shutter), @(model.top), @(model.bottom), @(model.left), @(model.right), @(model.leak), @(model.result), model.time]];
+        NSString *sqStr = [NSString stringWithFormat:@"insert into '%@' (mac, name, software, hardware, firmware, product, sensor, shutter, top, bottom, left, right, leak, result, time) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", tableName];
+        [_db executeUpdate:sqStr withArgumentsInArray:@[model.mac, model.name, model.software, model.hardware, model.firmware, model.product, @(model.sensor), @(model.shutter), @(model.top), @(model.bottom), @(model.left), @(model.right), @(model.leak), @(model.result), model.time]];
     }
     [_db close];
 }
