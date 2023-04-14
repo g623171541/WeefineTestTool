@@ -11,6 +11,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// excel表文件名和格式
+#define kCSVFileName    @"Weefine.csv"
+
 @interface DataBaseManager : NSObject
 
 + (instancetype)sharedFMDataBase;

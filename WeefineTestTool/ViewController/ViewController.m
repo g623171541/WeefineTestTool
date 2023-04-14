@@ -44,38 +44,40 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.deviceInfoModel = [[DeviceInfoModel alloc] init];
-    self.deviceInfoModel.name = @"name";
-    self.deviceInfoModel.mac = @"112233";
-    self.deviceInfoModel.software = @"1.1";
-    self.deviceInfoModel.hardware = @"2.2";
-    self.deviceInfoModel.firmware = @"3.3";
-    self.deviceInfoModel.product = @"product";
-    self.deviceInfoModel.waterPressure = 10;
-    self.deviceInfoModel.temperature = 20.22;
-    self.deviceInfoModel.gasPressure = 30;
-    self.deviceInfoModel.shutter = YES;
-    self.deviceInfoModel.up = YES;
-    self.deviceInfoModel.down = YES;
-    self.deviceInfoModel.left = YES;
-    self.deviceInfoModel.right = YES;
-    self.deviceInfoModel.leak = YES;
-    self.deviceInfoModel.result = YES;
+//    self.deviceInfoModel = [[DeviceInfoModel alloc] init];
+//    self.deviceInfoModel.name = @"name";
+//    self.deviceInfoModel.mac = @"112233";
+//    self.deviceInfoModel.software = @"1.1";
+//    self.deviceInfoModel.hardware = @"2.2";
+//    self.deviceInfoModel.firmware = @"3.3";
+//    self.deviceInfoModel.product = @"product";
+//    self.deviceInfoModel.waterPressure = 10;
+//    self.deviceInfoModel.temperature = 20.22;
+//    self.deviceInfoModel.gasPressure = 30;
+//    self.deviceInfoModel.shutter = YES;
+//    self.deviceInfoModel.up = YES;
+//    self.deviceInfoModel.down = YES;
+//    self.deviceInfoModel.left = YES;
+//    self.deviceInfoModel.right = YES;
+//    self.deviceInfoModel.leak = YES;
+//    self.deviceInfoModel.result = YES;
+//
+//    NSString *tableName = @"device";
+//    [[DataBaseManager sharedFMDataBase] createTable:tableName];
+//    [[DataBaseManager sharedFMDataBase] insertModel:self.deviceInfoModel tableName:tableName];
+//
+//    [[DataBaseManager sharedFMDataBase] exportExcelFile:tableName];
+//    NSLog(@"222");
+//
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [self shareFile:nil];
+//    });
+//
+//    // 导出成表格
+//
+//
+//    return;
     
-    NSString *tableName = @"device";
-    [[DataBaseManager sharedFMDataBase] createTable:tableName];
-    [[DataBaseManager sharedFMDataBase] insertModel:self.deviceInfoModel tableName:tableName];
-    
-    [[DataBaseManager sharedFMDataBase] exportExcelFile:tableName];
-    NSLog(@"222");
-    
-    // 导出成表格
-    
-    
-    return;
-    
-    // 快门按键测试 短按三下快门按键 长按一下快门按键
-    // 快门、上、下、左、右
     // 马达状态：已打开、已抽气完成、已正常关闭、超时打开
     
     // 初始化数据
@@ -259,7 +261,7 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
         }
         for (int i=0; i<self.stackViewArray.count; i++) {
             UIStackView *stackView = [self.stackViewArray objectAtIndex:i];
-            stackView.backgroundColor = [x intValue] == i ? kColorBlue1 : UIColor.whiteColor;
+            stackView.backgroundColor = [x intValue] == i ? kColorGrey3 : UIColor.whiteColor;
         }
         
         if (x.intValue <= 2) {
@@ -291,6 +293,21 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     } else if (tag == 1009) {
         // 关机，开始下一个产品测试
     }
+}
+
+/// 分享文件
+- (IBAction)shareFile:(UIButton *)sender {
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentsPath error:nil];
+    if (![contents containsObject:kCSVFileName]) {
+        [MBProgressHUD showMessage:@"暂无可分享的文件"];
+        return;
+    }
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:kCSVFileName];
+    NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+    NSArray *activityItems = @[fileURL];
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+    [self presentViewController:activityVC animated:YES completion:nil];
 }
 
 #pragma mark - UITableViewDelegate

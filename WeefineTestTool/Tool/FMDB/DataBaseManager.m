@@ -205,10 +205,7 @@
     NSArray *dataArr = [self getTableData:tableName];
     // 组装csv字符串
     NSString *csvString = [dataArr componentsJoinedByString:@"\n"];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
-    NSString *dateString = [formatter stringFromDate:[NSDate date]];
-    [self writeFile:csvString fileName:[NSString stringWithFormat:@"%@ %@.csv", @"Weefine", dateString]];
+    [self writeFile:csvString fileName:kCSVFileName];
 }
 
 /// 写入文件·
