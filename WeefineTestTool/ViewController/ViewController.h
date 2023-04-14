@@ -88,9 +88,9 @@
 /// 长按按键标题
 @property (weak, nonatomic) IBOutlet UILabel *longTitleLabel;
 /// 短按次数
-@property (weak, nonatomic) IBOutlet UILabel *shortStepLabel;
+@property (weak, nonatomic) IBOutlet UILabel *shortTimesLabel;
 /// 长按次数
-@property (weak, nonatomic) IBOutlet UILabel *longStepLabel;
+@property (weak, nonatomic) IBOutlet UILabel *longTimesLabel;
 
 
 // !!!: 漏水测试

@@ -7,6 +7,10 @@
 
 #import "ViewController.h"
 
+#define kKeyTitle(key)          [NSString stringWithFormat:@"%@按键测试", key]
+#define kKeyShortTitle(key)     [NSString stringWithFormat:@"短按三下%@按键", key]
+#define kKeyLongTitle(key)      [NSString stringWithFormat:@"长按一下%@按键", key]
+
 typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     PDPhysicalButtonTypeLeftShort       =   0x10,   // 左-短按
     PDPhysicalButtonTypeLeftLong        =   0x11,   // 左-长按
@@ -27,6 +31,8 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 @property (nonatomic, strong) NSArray *stackViewArray;
 /// 右侧检测结果view数组，用于显示当前哪一步
 @property (nonatomic, strong) NSArray *stepDetailViewArray;
+/// 5个按键标题修改
+@property (nonatomic, strong) NSDictionary <NSString *, NSArray <NSString *>*>*keyTitleDic;
 /// 设备测试模型
 @property (nonatomic, strong) DeviceInfoModel *deviceInfoModel;
 /// 蓝牙外设设备列表
@@ -37,6 +43,36 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.deviceInfoModel = [[DeviceInfoModel alloc] init];
+    self.deviceInfoModel.name = @"name";
+    self.deviceInfoModel.mac = @"112233";
+    self.deviceInfoModel.software = @"1.1";
+    self.deviceInfoModel.hardware = @"2.2";
+    self.deviceInfoModel.firmware = @"3.3";
+    self.deviceInfoModel.product = @"product";
+    self.deviceInfoModel.waterPressure = 10;
+    self.deviceInfoModel.temperature = 20.22;
+    self.deviceInfoModel.gasPressure = 30;
+    self.deviceInfoModel.shutter = YES;
+    self.deviceInfoModel.up = YES;
+    self.deviceInfoModel.down = YES;
+    self.deviceInfoModel.left = YES;
+    self.deviceInfoModel.right = YES;
+    self.deviceInfoModel.leak = YES;
+    self.deviceInfoModel.result = YES;
+    
+    NSString *tableName = @"device";
+    [[DataBaseManager sharedFMDataBase] createTable:tableName];
+    [[DataBaseManager sharedFMDataBase] insertModel:self.deviceInfoModel tableName:tableName];
+    
+    [[DataBaseManager sharedFMDataBase] exportExcelFile:tableName];
+    NSLog(@"222");
+    
+    // 导出成表格
+    
+    
+    return;
     
     // 快门按键测试 短按三下快门按键 长按一下快门按键
     // 快门、上、下、左、右
@@ -55,13 +91,20 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
             self.step = 0;
         }
     }];
+    
+    
 }
 
 /// 初始化数据
 - (void)initData {
-    self.step = 0;
     self.stackViewArray = @[self.stackView0, self.stackView1, self.stackView2, self.stackView3, self.stackView4, self.stackView5, self.stackView6, self.stackView7, self.stackView8, self.stackView9];
     self.stepDetailViewArray = @[self.tableView, self.deviceInfoView, self.sensorView, self.keyView, self.leakView, self.turnOffView];
+    self.keyTitleDic = @{@"3":@[kKeyTitle(@"快门"), kKeyShortTitle(@"快门"), kKeyLongTitle(@"快门")],
+                         @"4":@[kKeyTitle(@"上"), kKeyShortTitle(@"上"), kKeyLongTitle(@"上")],
+                         @"5":@[kKeyTitle(@"下"), kKeyShortTitle(@"下"), kKeyLongTitle(@"下")],
+                         @"6":@[kKeyTitle(@"左"), kKeyShortTitle(@"左"), kKeyLongTitle(@"左")],
+                         @"7":@[kKeyTitle(@"右"), kKeyShortTitle(@"右"), kKeyLongTitle(@"右")]};
+    self.step = 0;
 }
 
 /// 确实发现外设
@@ -225,6 +268,10 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
             [self.rightBoxView bringSubviewToFront:self.stepDetailViewArray[x.intValue-4]];
         } else {
             [self.rightBoxView bringSubviewToFront:self.keyView];
+            NSString *dicKey = [NSString stringWithFormat:@"%@", x];
+            self.keyTitleLabel.text = [self.keyTitleDic[dicKey] objectAtIndex:0];
+            self.shortTitleLabel.text = [self.keyTitleDic[dicKey] objectAtIndex:1];
+            self.longTitleLabel.text = [self.keyTitleDic[dicKey] objectAtIndex:2];
         }
     }];
 }

@@ -39,11 +39,17 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param tableName 表名
 - (int )getDataCount:(NSString *)tableName;
 
-#pragma mark - 时间戳转化为字符转 0000-00-00 00:00:00
+#pragma mark - 时间戳
+/// 时间戳转化为字符转 0000-00-00 00:00:00
 + (NSString *)time_timestampToString:(NSInteger )timestamp;
 
-#pragma mark - 字符串时间—>时间戳
+/// 字符串时间—>时间戳
 + (NSString *)time_StringToTimestamp:(NSString *)theTime;
+
+#pragma mark - 数据库导出成Excel表格
+- (void)exportExcelFile:(NSString *)tableName;
+
+
 
 @end
 

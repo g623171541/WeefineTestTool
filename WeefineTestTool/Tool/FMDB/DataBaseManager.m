@@ -46,7 +46,7 @@
     if ([_db open]) {
         if (![_db tableExists:tableName]) {
             // 创建表
-            NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ ('ID' INTEGER PRIMARY KEY AUTOINCREMENT, 'mac' TEXT NOT NULL, 'name' TEXT NOT NULL, 'software' TEXT NOT NULL, 'hardware' TEXT NOT NULL, 'firmware' TEXT NOT NULL, 'product' TEXT NOT NULL, 'sensor' INTEGER NOT NULL, 'shutter' INTEGER NOT NULL, 'top' INTEGER NOT NULL, 'bottom' INTEGER NOT NULL, 'left' INTEGER NOT NULL, 'right' INTEGER NOT NULL, 'leak' INTEGER NOT NULL, 'result' INTEGER NOT NULL, 'time' TEXT NOT NULL)", tableName];
+            NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ ('ID' INTEGER PRIMARY KEY AUTOINCREMENT, 'mac' TEXT NOT NULL, 'name' TEXT NOT NULL, 'software' TEXT NOT NULL, 'hardware' TEXT NOT NULL, 'firmware' TEXT NOT NULL, 'product' TEXT NOT NULL, 'waterPressure' INTEGER NOT NULL, 'temperature' REAL NOT NULL, 'gasPressure' INTEGER NOT NULL, 'shutter' INTEGER NOT NULL, 'up' INTEGER NOT NULL, 'down' INTEGER NOT NULL, 'left' INTEGER NOT NULL, 'right' INTEGER NOT NULL, 'leak' INTEGER NOT NULL, 'result' INTEGER NOT NULL, 'time' TEXT NOT NULL)", tableName];
             [_db executeUpdate:sql];
         }else{
             NSLog(@"已经有表了，不需要重新添加");
@@ -99,13 +99,13 @@
     //0.直接sql语句
     //    BOOL result = [db executeUpdate:@"insert into 't_student' (ID,name,phone,score) values(110,'x1','11',83)"];
     //1.
-    //    BOOL result = [db executeUpdate:@"insert into 't_student'(ID,name,phone,score) values(?,?,?,?)",@111,@"x2",@"12",@23];
+    //    BOOL result = [db executeUpdate:@"insert into 't_student'(ID,name,phone,score) values(?,?,?,?)",@111,@"x2,12",@23];
     //2.
-    //    BOOL result = [db executeUpdateWithFormat:@"insert into 't_student' (ID,name,phone,score) values(%d,%@,%@,%d)",112,@"x3",@"13",43];
+    //    BOOL result = [db executeUpdateWithFormat:@"insert into 't_student' (ID,name,phone,score) values(%d,%@,%@,%d)",112,@"x3,13",43];
     //3.
     if ([_db open]) {
-        NSString *sqStr = [NSString stringWithFormat:@"insert into '%@' (mac, name, software, hardware, firmware, product, sensor, shutter, top, bottom, left, right, leak, result, time) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", tableName];
-        [_db executeUpdate:sqStr withArgumentsInArray:@[model.mac, model.name, model.software, model.hardware, model.firmware, model.product, @(model.sensor), @(model.shutter), @(model.top), @(model.bottom), @(model.left), @(model.right), @(model.leak), @(model.result), model.time]];
+        NSString *sqStr = [NSString stringWithFormat:@"insert into '%@' (mac, name, software, hardware, firmware, product, waterPressure, temperature, gasPressure, shutter, up, down, left, right, leak, result, time) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", tableName];
+        [_db executeUpdate:sqStr withArgumentsInArray:@[model.mac, model.name, model.software, model.hardware, model.firmware, model.product, @(model.waterPressure), @(model.temperature), @(model.gasPressure), @(model.shutter), @(model.up), @(model.down), @(model.left), @(model.right), @(model.leak), @(model.result), model.time]];
     }
     [_db close];
 }
@@ -181,7 +181,8 @@
     return count;
 }
 
-#pragma mark - 时间戳转化为字符转 0000-00-00 00:00:00
+#pragma mark - 时间戳
+/// 时间戳转化为字符转 0000-00-00 00:00:00
 + (NSString *)time_timestampToString:(NSInteger )timestamp{
     NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:timestamp];
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
@@ -190,13 +191,84 @@
     return string;
 }
 
-#pragma mark - 字符串时间—>时间戳
+/// 字符串时间—>时间戳
 + (NSString *)time_StringToTimestamp:(NSString *)theTime {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSDate *dateTodo = [formatter dateFromString:theTime];
     NSString *timeSp = [NSString stringWithFormat:@"%ld",(long)[dateTodo timeIntervalSince1970]];
     return timeSp;
+}
+
+#pragma mark - 数据库导出成Excel表格
+- (void)exportExcelFile:(NSString *)tableName {
+    NSArray *dataArr = [self getTableData:tableName];
+    // 组装csv字符串
+    NSString *csvString = [dataArr componentsJoinedByString:@"\n"];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    NSString *dateString = [formatter stringFromDate:[NSDate date]];
+    [self writeFile:csvString fileName:[NSString stringWithFormat:@"%@ %@.csv", @"Weefine", dateString]];
+}
+
+/// 写入文件·
+- (void)writeFile:(NSString *)csvString fileName:(NSString *)fileName{
+    // 创建文件管理器
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    // 获取路径
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    // 去除需要的路径
+    NSString *documentDirectory = [paths objectAtIndex:0];
+    // 获取文件路径
+    NSString *path = [documentDirectory stringByAppendingPathComponent:fileName];
+    if (![fileManager fileExistsAtPath:path]) {
+        //创建文件fileName文件名称，contents文件内容，如果开始没有内容可以设置为nil，attributes文件的属性,初始为nil
+        [fileManager createFileAtPath:fileName contents:nil attributes:nil];
+    }
+    
+    // 够造为NSData，并使用NSData进行文件的写入。
+    NSData *data = [csvString dataUsingEncoding:NSUTF8StringEncoding];
+    [data writeToFile:path atomically:YES];
+}
+
+
+/// 获取数据库中表的全部数据
+/// - Parameter tableName: 表名
+- (NSArray <NSString *>*)getTableData:(NSString *)tableName {
+    NSMutableArray *dataArrM = [NSMutableArray array];
+    
+    NSString *title = @"ID,MAC,蓝牙名称,软件版本,硬件版本,固件版本,产品型号,水压(mbar),水温(­°C),气压(pa),快门按键,上按键,下按键,左按键,右按键,漏水测试,整机测试结果,时间";
+    [dataArrM addObject:title];
+    
+    [_db open];
+    NSString *sqStr = [NSString stringWithFormat:@"select * from '%@' order by id",tableName];
+    FMResultSet *result = [_db executeQuery:sqStr];
+    while ([result next]) {
+        NSMutableString *dataStrM = [NSMutableString string];
+        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"ID"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"mac"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"name"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"software"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"hardware"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"firmware"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"product"]];
+        
+        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"waterPressure"]];
+        [dataStrM appendFormat:@"%.2f,", [result doubleForColumn:@"temperature"]];
+        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"gasPressure"]];
+        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"shutter"]];
+        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"up"]];
+        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"down"]];
+        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"left"]];
+        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"right"]];
+        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"right"]];
+        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"result"]];
+        
+        [dataStrM appendFormat:@"%@", [result stringForColumn:@"time"]];
+        [dataArrM addObject:dataStrM.copy];
+    }
+    [_db close];
+    return dataArrM;
 }
 
 @end

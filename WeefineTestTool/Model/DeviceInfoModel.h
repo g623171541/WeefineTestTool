@@ -26,14 +26,19 @@ NS_ASSUME_NONNULL_BEGIN
 /// 产品型号
 @property (nonatomic, strong) NSString *product;
 
-/// 传感器测试结果
-@property (nonatomic, assign) BOOL sensor;
+
+/// 水压
+@property (nonatomic, assign) NSInteger waterPressure;
+/// 水温
+@property (nonatomic, assign) CGFloat temperature;
+/// 气压
+@property (nonatomic, assign) NSInteger gasPressure;
 /// 快门按键测试结果
 @property (nonatomic, assign) BOOL shutter;
 /// 上测试结果
-@property (nonatomic, assign) BOOL top;
+@property (nonatomic, assign) BOOL up;
 /// 下测试结果
-@property (nonatomic, assign) BOOL bottom;
+@property (nonatomic, assign) BOOL down;
 /// 左测试结果
 @property (nonatomic, assign) BOOL left;
 /// 右测试结果

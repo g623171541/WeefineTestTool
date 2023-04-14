@@ -1316,7 +1316,7 @@
                         <outlet property="leakView" destination="2YO-es-ffL" id="jIN-PH-jmK"/>
                         <outlet property="leftBoxView" destination="1bf-5K-TSB" id="vpu-Db-h5m"/>
                         <outlet property="leftBtn" destination="1Yv-Eu-xHG" id="gMz-Yj-97t"/>
-                        <outlet property="longStepLabel" destination="msn-ex-4a7" id="mN5-TI-rzu"/>
+                        <outlet property="longTimesLabel" destination="msn-ex-4a7" id="Ubw-M2-CMb"/>
                         <outlet property="longTitleLabel" destination="mli-Nv-lBz" id="X4j-C8-zWe"/>
                         <outlet property="manufacturerLabel" destination="O3t-gU-OOO" id="maS-8c-atO"/>
                         <outlet property="motorStateLabel" destination="DVK-3Q-tDO" id="ZLp-lJ-4oa"/>
@@ -1325,7 +1325,7 @@
                         <outlet property="rightBtn" destination="FMa-l3-ctW" id="f9T-8T-8q0"/>
                         <outlet property="sensorBtn" destination="scZ-mo-DRP" id="vgJ-66-LhL"/>
                         <outlet property="sensorView" destination="mlz-DH-elt" id="Lbi-6T-GXk"/>
-                        <outlet property="shortStepLabel" destination="53v-wd-jwy" id="Aff-6I-qYP"/>
+                        <outlet property="shortTimesLabel" destination="53v-wd-jwy" id="DJw-1t-5lS"/>
                         <outlet property="shortTitleLabel" destination="TzM-4a-tbD" id="AHy-jo-hEK"/>
                         <outlet property="shutdownBtn" destination="IW0-uO-Ff2" id="OLz-S1-Zgx"/>
                         <outlet property="shutterBtn" destination="18G-W9-WKK" id="CQa-0Y-tOm"/>
