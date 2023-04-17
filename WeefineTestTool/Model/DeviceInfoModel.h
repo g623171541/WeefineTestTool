@@ -9,7 +9,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 测试结果通过
+#define kTestResultOK       @"OK"
+// 测试结果不通过
+#define kTestResultNC       @"NC"
+
 @interface DeviceInfoModel : NSObject
+
+/// 制造商
+@property (nonatomic, strong) NSString *manufacturer;
 
 /// 连接时间
 @property (nonatomic, strong) NSString *time;
@@ -34,20 +42,20 @@ NS_ASSUME_NONNULL_BEGIN
 /// 气压
 @property (nonatomic, assign) NSInteger gasPressure;
 /// 快门按键测试结果
-@property (nonatomic, assign) BOOL shutter;
+@property (nonatomic, strong) NSString *shutter;
 /// 上测试结果
-@property (nonatomic, assign) BOOL up;
+@property (nonatomic, strong) NSString *up;
 /// 下测试结果
-@property (nonatomic, assign) BOOL down;
+@property (nonatomic, strong) NSString *down;
 /// 左测试结果
-@property (nonatomic, assign) BOOL left;
+@property (nonatomic, strong) NSString *left;
 /// 右测试结果
-@property (nonatomic, assign) BOOL right;
+@property (nonatomic, strong) NSString *right;
 /// 漏水测试结果
-@property (nonatomic, assign) BOOL leak;
+@property (nonatomic, strong) NSString *leak;
 
 /// 总的测试结果
-@property (nonatomic, assign) BOOL result;
+@property (nonatomic, strong) NSString *result;
 
 
 

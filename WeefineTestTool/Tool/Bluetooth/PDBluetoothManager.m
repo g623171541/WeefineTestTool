@@ -17,31 +17,41 @@
 @end
 
 @implementation PDBluetoothManager
-// 服务
-static NSString * const hrsServiceUUIDString = @"0000180D-0000-1000-8000-00805F9B34FB";
-static NSString * const hrsSensorLocationCharacteristicUUIDString = @"00002A38-0000-1000-8000-00805F9B34FB";
 
-// 设备信息的服务
-static NSString * const DeviceInformationServiceUUIDString = @"180A";
-// 制造商特征UUID
-static NSString * const ManufacturerInformationCharacteristicUUIDString = @"2A29";
-// 硬件版本
-static NSString * const HardwareInformationCharacteristicUUIDString = @"2A27";
-// 固件信息
-static NSString * const FirmwareInformationCharacteristicUUIDString = @"2A26";
-// 软件版本特征
-static NSString * const SoftwareInformationCharacteristicUUIDString = @"2A19";
-
-// 电池服务
+// !!!: 电池服务
 static NSString * const BatteryServiceUUIDString = @"180F";
 static NSString * const BatteryCharacteristicUUIDString = @"2A19";
 
-// 按键服务
+// !!!: 设备信息的服务
+static NSString * const DeviceInformationServiceUUIDString = @"180A";
+// 制造商特征
+static NSString * const ManufacturerInformationCharacteristicUUIDString = @"2A29";
+// 硬件版本特征
+static NSString * const HardwareInformationCharacteristicUUIDString = @"2A27";
+// 固件信息特征
+static NSString * const FirmwareInformationCharacteristicUUIDString = @"2A26";
+// 软件版本特征
+static NSString * const SoftwareInformationCharacteristicUUIDString = @"2A28";
+
+// !!!: 按键服务
 static NSString * const ButtonServiceUUIDString = @"00001523-1212-EFDE-1523-785FEABCD123";
+// 按键特征
 static NSString * const ButtonCharacteristicUUIDString = @"00001524-1212-EFDE-1523-785FEABCD123";
-// 传感器服务
+// 关机特征
+static NSString * const ShutdownCharacteristicUUIDString = @"00001525-1212-EFDE-1523-785FEABCD123";
+
+// !!!: 传感器服务
 static NSString * const SensorServiceUUIDString = @"00001623-1212-EFDE-1523-785FEABCD123";
-static NSString * const SensorCharacteristicUUIDString = @"00001625-1212-EFDE-1523-785FEABCD123";
+// 马达控制特征 1字节 0x01启动抽气 0x00停止抽气
+static NSString * const MotorCharacteristicUUIDString = @"00001624-1212-EFDE-1523-785FEABCD123";
+// 水压特征
+static NSString * const WaterPressureCharacteristicUUIDString = @"00001625-1212-EFDE-1523-785FEABCD123";
+// 温度特征
+static NSString * const TemperatureCharacteristicUUIDString = @"00001626-1212-EFDE-1523-785FEABCD123";
+// 气压特征
+static NSString * const GasPressureCharacteristicUUIDString = @"00001627-1212-EFDE-1523-785FEABCD123";
+// 漏水上报特征
+static NSString * const LeakCharacteristicUUIDString = @"00001628-1212-EFDE-1523-785FEABCD123";
 
 #pragma mark - BluetoothManager 单例
 static PDBluetoothManager *instance = nil;
@@ -142,7 +152,8 @@ static dispatch_once_t token = 0;
         NSData *advData = [advertisementData valueForKey:@"kCBAdvDataManufacturerData"];
         if (advData.length >= self.advertisementDataLength) {
             // MAC 6Bytes
-            peripheral.mac = [[advData subdataWithRange:NSMakeRange(0, 6)] convertToHexStr];
+//            peripheral.mac = [[advData subdataWithRange:NSMakeRange(0, 6)] convertToHexStr];
+            peripheral.mac = [advData convertToHexStr];
         }
         
         if (![self.myPeripherals containsObject:peripheral]) {
@@ -206,7 +217,7 @@ static dispatch_once_t token = 0;
     for (CBService *service in peripheral.services) {
         // 访问服务特征
         [self.peripheral discoverCharacteristics:nil forService:service];
-        NSLog(@"发现服务特征  UUID:%@",[service.UUID UUIDString]);
+        NSLog(@"发现服务:%@",[service.UUID UUIDString]);
     }
 }
 
@@ -216,6 +227,7 @@ static dispatch_once_t token = 0;
         NSLog(@"错误特征:%@",[error localizedDescription]);
         return;
     }
+    NSLog(@"服务：%@  特征集合：%@", service.UUID, service.characteristics);
     
     for (CBCharacteristic *characteristic in service.characteristics) {
         if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ManufacturerInformationCharacteristicUUIDString]]) {
@@ -227,17 +239,20 @@ static dispatch_once_t token = 0;
         } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ButtonCharacteristicUUIDString]]) {
             // 监听按键信息特征
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
-        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:SensorCharacteristicUUIDString]]) {
-            // 监听传感器信息特征
-            [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:WaterPressureCharacteristicUUIDString]]) {
+            // 读取传感器信息特征
+            [peripheral readValueForCharacteristic:characteristic];
         } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:HardwareInformationCharacteristicUUIDString]]) {
             // 读取硬件信息
             [peripheral readValueForCharacteristic:characteristic];
         } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:FirmwareInformationCharacteristicUUIDString]]) {
             // 读取固件信息
             [peripheral readValueForCharacteristic:characteristic];
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:SoftwareInformationCharacteristicUUIDString]]) {
+            // 读取软件信息
+            [peripheral readValueForCharacteristic:characteristic];
         }
-        NSLog(@"发现特征:%@  属性:%ld",[characteristic.UUID UUIDString],(unsigned long)characteristic.properties);
+        NSLog(@"发现特征:%@",[characteristic.UUID UUIDString]);
     }
 }
 
@@ -283,18 +298,24 @@ static dispatch_once_t token = 0;
         return;
     }
     
-    // 传感器信息特征值
-    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:SensorCharacteristicUUIDString]]) {
-        NSString *value = [NSString getStringFromHexByte:(Byte *)characteristic.value.bytes length:(int)characteristic.value.length].uppercaseString;
-        NSString *oneByte = [value substringWithBeginByte:1 byte:1];
-        NSString *twoByte = [value substringWithBeginByte:2 byte:1];
-        NSString *threeByte = [value substringWithBeginByte:3 byte:1];
-        NSString *fourByte = [value substringWithBeginByte:4 byte:1];
-        if (self.sensorCharacteristic) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.sensorCharacteristic((float)strtoul([[NSString stringWithFormat:@"%@%@",fourByte,threeByte] UTF8String], 0, 16) * 0.1, (float)strtoul([[NSString stringWithFormat:@"%@%@",twoByte,oneByte] UTF8String], 0, 16) * 0.1);
-            });
-        }
+    // 水压
+    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:WaterPressureCharacteristicUUIDString]]) {
+        
+        return;
+    }
+    // 气压
+    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:GasPressureCharacteristicUUIDString]]) {
+        
+        return;
+    }
+    // 温度
+    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:TemperatureCharacteristicUUIDString]]) {
+        
+        return;
+    }
+    // 漏水
+    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:LeakCharacteristicUUIDString]]) {
+        
         return;
     }
     

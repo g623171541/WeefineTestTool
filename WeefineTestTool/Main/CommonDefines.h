@@ -30,7 +30,7 @@
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
 
 //NSLOG
-#define NSLog(format, ...)  NSLog((@"\t文件名:%s" "\t行号:%d" "\t方法名:%s" "打印结果:" format"\n"), [[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__,__FUNCTION__,  ##__VA_ARGS__)
+//#define NSLog(format, ...)  NSLog((@"\t文件名:%s" "\t行号:%d" "\t方法名:%s" "打印结果:" format"\n"), [[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__,__FUNCTION__,  ##__VA_ARGS__)
 //#define NSLog(format,...) printf("文件名:%s\t行号:%d\t结果:%s\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__,[[NSString stringWithFormat:(format), ##__VA_ARGS__] UTF8String])
 //#define NSLog(format,...) printf("%s 需要加8小时\t文件名:%s\t行号:%d\t结果:%s\n",[[[NSDate date] description] UTF8String],[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__,[[NSString stringWithFormat:(format), ##__VA_ARGS__] UTF8String])
 

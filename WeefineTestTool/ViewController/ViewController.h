@@ -58,6 +58,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *batteryLabel;
 /// 蓝牙名称
 @property (weak, nonatomic) IBOutlet UILabel *bleNameLabel;
+/// MAC
+@property (weak, nonatomic) IBOutlet UILabel *macLabel;
 /// 制造商
 @property (weak, nonatomic) IBOutlet UILabel *manufacturerLabel;
 /// 硬件

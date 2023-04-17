@@ -41,14 +41,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void(^batteryCharacteristic)(NSInteger battery);
 /// 当前点击按键
 @property (nonatomic, copy) void(^buttonCharacteristic)(NSString *);
-/// 传感器信息
-@property (nonatomic, copy) void(^sensorCharacteristic)(float, float);
 /// 硬件版本
 @property (nonatomic, copy) void(^hardwareInformationCharacteristic)(NSString *hardware);
 /// 软件版本
 @property (nonatomic, copy) void(^softwareInformationCharacteristic)(NSString *software);
 /// 固件版本
 @property (nonatomic, copy) void(^firmwareInformationCharacteristic)(NSString *firmware);
+/// 水压
+@property (nonatomic, copy) void(^waterPressureCharacteristic)(float);
+/// 温度
+@property (nonatomic, copy) void(^temperatureCharacteristic)(float);
+/// 气压
+@property (nonatomic, copy) void(^gasPressureCharacteristic)(float);
+/// 漏水
+@property (nonatomic, copy) void(^leakCharacteristic)(BOOL);
 
 + (instancetype)shareInstance;
 

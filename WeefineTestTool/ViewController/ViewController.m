@@ -37,6 +37,7 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 @property (nonatomic, strong) DeviceInfoModel *deviceInfoModel;
 /// 蓝牙外设设备列表
 @property (nonatomic, strong) NSMutableArray <CBPeripheral *>*peripheralArrM;
+@property (nonatomic, strong) NSMutableDictionary *dicM;
 @end
 
 @implementation ViewController
@@ -44,61 +45,31 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    self.deviceInfoModel = [[DeviceInfoModel alloc] init];
-//    self.deviceInfoModel.name = @"name";
-//    self.deviceInfoModel.mac = @"112233";
-//    self.deviceInfoModel.software = @"1.1";
-//    self.deviceInfoModel.hardware = @"2.2";
-//    self.deviceInfoModel.firmware = @"3.3";
-//    self.deviceInfoModel.product = @"product";
-//    self.deviceInfoModel.waterPressure = 10;
-//    self.deviceInfoModel.temperature = 20.22;
-//    self.deviceInfoModel.gasPressure = 30;
-//    self.deviceInfoModel.shutter = YES;
-//    self.deviceInfoModel.up = YES;
-//    self.deviceInfoModel.down = YES;
-//    self.deviceInfoModel.left = YES;
-//    self.deviceInfoModel.right = YES;
-//    self.deviceInfoModel.leak = YES;
-//    self.deviceInfoModel.result = YES;
-//
-//    NSString *tableName = @"device";
-//    [[DataBaseManager sharedFMDataBase] createTable:tableName];
-//    [[DataBaseManager sharedFMDataBase] insertModel:self.deviceInfoModel tableName:tableName];
-//
-//    [[DataBaseManager sharedFMDataBase] exportExcelFile:tableName];
-//    NSLog(@"222");
-//
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self shareFile:nil];
-//    });
-//
-//    // 导出成表格
-//
-//
-//    return;
-    
     // 马达状态：已打开、已抽气完成、已正常关闭、超时打开
     
     // 初始化数据
     [self initData];
-    // 加载蓝牙模块
-    [self loadBluetoothManager];
     // 添加观察者
     [self addObserver];
+    // 加载蓝牙模块
+    [self loadBluetoothManager];
     
-    [NSTimer scheduledTimerWithTimeInterval:1.0 repeats:YES block:^(NSTimer * _Nonnull timer) {
-        self.step ++;
-        if (self.step >= 10) {
-            self.step = 0;
-        }
-    }];
+//    [NSTimer scheduledTimerWithTimeInterval:1.0 repeats:YES block:^(NSTimer * _Nonnull timer) {
+//        self.step ++;
+//        if (self.step >= 10) {
+//            self.step = 0;
+//        }
+//    }];
     
-    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.dicM setValue:@"123" forKey:@"soft"];
+    });
 }
 
 /// 初始化数据
 - (void)initData {
+    self.deviceInfoModel = [[DeviceInfoModel alloc] init];
+    self.dicM = [NSMutableDictionary dictionary];
     self.stackViewArray = @[self.stackView0, self.stackView1, self.stackView2, self.stackView3, self.stackView4, self.stackView5, self.stackView6, self.stackView7, self.stackView8, self.stackView9];
     self.stepDetailViewArray = @[self.tableView, self.deviceInfoView, self.sensorView, self.keyView, self.leakView, self.turnOffView];
     self.keyTitleDic = @{@"3":@[kKeyTitle(@"快门"), kKeyShortTitle(@"快门"), kKeyLongTitle(@"快门")],
@@ -157,7 +128,7 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     [PDBluetoothManager shareInstance].didConnectPeripheral = ^(NSString *name) {
         @strongify(self);
         NSLog(@"蓝牙名称：%@", name);
-        self.bleNameLabel.text = name;
+        self.step++;
         self.deviceInfoModel.name = name;
         self.deviceInfoModel.mac = [PDBluetoothManager shareInstance].peripheral.mac;
     };
@@ -172,11 +143,6 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
         NSLog(@"按下了按键-【按键编号:%@】",buttonString);
     };
     
-    // !!!: 传感器信息回调
-    [PDBluetoothManager shareInstance].sensorCharacteristic = ^(float temperature, float depthOfWater) {
-        NSLog(@"当前温度：%f，深度：%f", temperature, depthOfWater);
-    };
-    
     // !!!: 电池信息回调
     [PDBluetoothManager shareInstance].batteryCharacteristic = ^(NSInteger battery) {
         @strongify(self);
@@ -188,29 +154,43 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     [PDBluetoothManager shareInstance].manufacturerInformationCharacteristic = ^(NSString * _Nonnull manufacturer) {
         @strongify(self);
         NSLog(@"制造商：%@", manufacturer);
-        self.manufacturerLabel.text = manufacturer;
+        self.deviceInfoModel.manufacturer = manufacturer;
     };
     // !!!: 硬件版本回调
     [PDBluetoothManager shareInstance].hardwareInformationCharacteristic = ^(NSString * _Nonnull hardware) {
         @strongify(self);
         NSLog(@"硬件版本：%@", hardware);
-        self.hardwareLabel.text = [NSString stringWithFormat:@"v%@", hardware];
         self.deviceInfoModel.hardware = hardware;
     };
     // !!!: 软件版本回调
     [PDBluetoothManager shareInstance].softwareInformationCharacteristic = ^(NSString * _Nonnull software) {
         @strongify(self);
         NSLog(@"软件版本：%@", software);
-        self.softwareLabel.text = [NSString stringWithFormat:@"v%@", software];
         self.deviceInfoModel.software = software;
     };
     // !!!: 固件版本回调
     [PDBluetoothManager shareInstance].firmwareInformationCharacteristic = ^(NSString * _Nonnull firmware) {
         @strongify(self);
         NSLog(@"固件版本：%@", firmware);
-        self.firmwareLabel.text = [NSString stringWithFormat:@"v%@", firmware];
         self.deviceInfoModel.firmware = firmware;
     };
+    // !!!: 水压
+    [PDBluetoothManager shareInstance].waterPressureCharacteristic = ^(float water) {
+        NSLog(@"当前水压：%f", water);
+    };
+    // !!!: 气压
+    [PDBluetoothManager shareInstance].gasPressureCharacteristic = ^(float gas) {
+        NSLog(@"当前气压：%f", gas);
+    };
+    // !!!: 温度
+    [PDBluetoothManager shareInstance].temperatureCharacteristic = ^(float temperature) {
+        NSLog(@"当前温度：%f", temperature);
+    };
+    // !!!: 漏水检测
+    [PDBluetoothManager shareInstance].leakCharacteristic = ^(BOOL leak) {
+        NSLog(@"当前是否漏水：%d", leak);
+    };
+    
 }
 
 #pragma mark - 按键事件处理
@@ -252,6 +232,13 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 #pragma mark - 添加观察者
 - (void)addObserver {
     @weakify(self);
+    // 绑定数据
+    RAC(self.bleNameLabel, text) = RACObserve(self.deviceInfoModel, name);
+    RAC(self.macLabel, text) = RACObserve(self.deviceInfoModel, mac);
+    RAC(self.manufacturerLabel, text) = RACObserve(self.deviceInfoModel, manufacturer);
+    RAC(self.hardwareLabel, text) = RACObserve(self.deviceInfoModel, hardware);
+    RAC(self.softwareLabel, text) = RACObserve(self.deviceInfoModel, software);
+    RAC(self.firmwareLabel, text) = RACObserve(self.deviceInfoModel, firmware);
     // 根据步骤切换UI
     [RACObserve(self, step) subscribeNext:^(NSNumber *x) {
         @strongify(self);
@@ -276,6 +263,10 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
             self.longTitleLabel.text = [self.keyTitleDic[dicKey] objectAtIndex:2];
         }
     }];
+    
+    [RACObserve(self, dicM) subscribeNext:^(id  _Nullable x) {
+        NSLog(@"监听到改变：%@", x);
+    }];
 }
 
 #pragma mark - 事件
@@ -284,6 +275,7 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     NSUInteger tag = sender.tag;
     if (tag == 1001) {
         // 设备信息页面中的下一步
+        self.step++;
     } else if (tag == 1002) {
         // 传感器测试下一步
     } else if (tag == 1003) {
@@ -340,6 +332,8 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [[PDBluetoothManager shareInstance] stopScan];
+    // 连接到指定外围
+    [[PDBluetoothManager shareInstance].centralManager connectPeripheral:self.peripheralArrM[indexPath.row] options:nil];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 0.001f;

@@ -46,7 +46,7 @@
     if ([_db open]) {
         if (![_db tableExists:tableName]) {
             // 创建表
-            NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ ('ID' INTEGER PRIMARY KEY AUTOINCREMENT, 'mac' TEXT NOT NULL, 'name' TEXT NOT NULL, 'software' TEXT NOT NULL, 'hardware' TEXT NOT NULL, 'firmware' TEXT NOT NULL, 'product' TEXT NOT NULL, 'waterPressure' INTEGER NOT NULL, 'temperature' REAL NOT NULL, 'gasPressure' INTEGER NOT NULL, 'shutter' INTEGER NOT NULL, 'up' INTEGER NOT NULL, 'down' INTEGER NOT NULL, 'left' INTEGER NOT NULL, 'right' INTEGER NOT NULL, 'leak' INTEGER NOT NULL, 'result' INTEGER NOT NULL, 'time' TEXT NOT NULL)", tableName];
+            NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ ('ID' INTEGER PRIMARY KEY AUTOINCREMENT, 'mac' TEXT NOT NULL, 'name' TEXT NOT NULL, 'software' TEXT NOT NULL, 'hardware' TEXT NOT NULL, 'firmware' TEXT NOT NULL, 'product' TEXT NOT NULL, 'waterPressure' INTEGER NOT NULL, 'temperature' REAL NOT NULL, 'gasPressure' INTEGER NOT NULL, 'shutter' TEXT NOT NULL, 'up' TEXT NOT NULL, 'down' TEXT NOT NULL, 'left' TEXT NOT NULL, 'right' TEXT NOT NULL, 'leak' TEXT NOT NULL, 'result' TEXT NOT NULL, 'time' TEXT NOT NULL)", tableName];
             [_db executeUpdate:sql];
         }else{
             NSLog(@"已经有表了，不需要重新添加");
@@ -105,7 +105,23 @@
     //3.
     if ([_db open]) {
         NSString *sqStr = [NSString stringWithFormat:@"insert into '%@' (mac, name, software, hardware, firmware, product, waterPressure, temperature, gasPressure, shutter, up, down, left, right, leak, result, time) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", tableName];
-        [_db executeUpdate:sqStr withArgumentsInArray:@[model.mac, model.name, model.software, model.hardware, model.firmware, model.product, @(model.waterPressure), @(model.temperature), @(model.gasPressure), @(model.shutter), @(model.up), @(model.down), @(model.left), @(model.right), @(model.leak), @(model.result), model.time]];
+        [_db executeUpdate:sqStr withArgumentsInArray:@[model.mac,
+                                                        model.name,
+                                                        model.software,
+                                                        model.hardware,
+                                                        model.firmware,
+                                                        model.product,
+                                                        @(model.waterPressure),
+                                                        @(model.temperature),
+                                                        @(model.gasPressure),
+                                                        model.shutter,
+                                                        model.up,
+                                                        model.down,
+                                                        model.left,
+                                                        model.right,
+                                                        model.leak,
+                                                        model.result,
+                                                        model.time]];
     }
     [_db close];
 }
@@ -253,13 +269,13 @@
         [dataStrM appendFormat:@"%ld,", [result longForColumn:@"waterPressure"]];
         [dataStrM appendFormat:@"%.2f,", [result doubleForColumn:@"temperature"]];
         [dataStrM appendFormat:@"%ld,", [result longForColumn:@"gasPressure"]];
-        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"shutter"]];
-        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"up"]];
-        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"down"]];
-        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"left"]];
-        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"right"]];
-        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"right"]];
-        [dataStrM appendFormat:@"%ld,", [result longForColumn:@"result"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"shutter"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"up"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"down"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"left"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"right"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"leak"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"result"]];
         
         [dataStrM appendFormat:@"%@", [result stringForColumn:@"time"]];
         [dataArrM addObject:dataStrM.copy];
