@@ -26,6 +26,8 @@ static NSString * const BatteryCharacteristicUUIDString = @"2A19";
 static NSString * const DeviceInformationServiceUUIDString = @"180A";
 // 制造商特征
 static NSString * const ManufacturerInformationCharacteristicUUIDString = @"2A29";
+// 产品型号
+static NSString * const ProductModelCharacteristicUUIDString = @"2A24";
 // 硬件版本特征
 static NSString * const HardwareInformationCharacteristicUUIDString = @"2A27";
 // 固件信息特征
@@ -233,6 +235,9 @@ static dispatch_once_t token = 0;
         if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ManufacturerInformationCharacteristicUUIDString]]) {
             // 读取设备信息
             [peripheral readValueForCharacteristic:characteristic];
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ProductModelCharacteristicUUIDString]]) {
+            // 产品型号特征
+            [peripheral readValueForCharacteristic:characteristic];
         } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:BatteryCharacteristicUUIDString]]) {
             // 监听电池信息特征
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
@@ -269,6 +274,16 @@ static dispatch_once_t token = 0;
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *manufacturer = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
                 self.manufacturerInformationCharacteristic(manufacturer);
+            });
+        }
+        return;
+    }
+    // 产品型号特征值
+    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ProductModelCharacteristicUUIDString]]) {
+        if (self.productModelCharacteristic) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSString *product = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
+                self.productModelCharacteristic(product);
             });
         }
         return;

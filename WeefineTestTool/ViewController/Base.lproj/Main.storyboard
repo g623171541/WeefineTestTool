@@ -110,7 +110,6 @@
                                                             <constraint firstAttribute="width" constant="24" id="rSm-4W-EaO"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
                                                 <userDefinedRuntimeAttributes>
@@ -156,7 +155,6 @@
                                                             <constraint firstAttribute="height" constant="24" id="q2Z-1q-lF1"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
                                                 <userDefinedRuntimeAttributes>
@@ -202,7 +200,6 @@
                                                             <constraint firstAttribute="height" constant="24" id="XUA-Sz-kxJ"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
                                                 <userDefinedRuntimeAttributes>
@@ -248,7 +245,6 @@
                                                             <constraint firstAttribute="width" constant="24" id="M7D-bd-kZt"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
                                                 <userDefinedRuntimeAttributes>
@@ -294,7 +290,6 @@
                                                             <constraint firstAttribute="height" constant="24" id="vsW-J7-Fmx"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
                                                 <userDefinedRuntimeAttributes>
@@ -340,7 +335,6 @@
                                                             <constraint firstAttribute="height" constant="24" id="n0q-Pz-B58"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
                                                 <userDefinedRuntimeAttributes>
@@ -386,7 +380,6 @@
                                                             <constraint firstAttribute="width" constant="24" id="dBT-qf-WMd"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
                                                 <userDefinedRuntimeAttributes>
@@ -432,7 +425,6 @@
                                                             <constraint firstAttribute="width" constant="24" id="hQU-Px-SbB"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
                                                 <userDefinedRuntimeAttributes>
@@ -478,7 +470,6 @@
                                                             <constraint firstAttribute="height" constant="24" id="QVG-tr-pzH"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                        <state key="normal" image="icon_ok"/>
                                                     </button>
                                                 </subviews>
                                                 <userDefinedRuntimeAttributes>
@@ -1025,7 +1016,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="621" height="394"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vf0-ZV-53I">
-                                                <rect key="frame" x="40" y="30" width="541" height="264"/>
+                                                <rect key="frame" x="40" y="16" width="541" height="282"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="eKV-cd-cxH">
                                                         <rect key="frame" x="0.0" y="0.0" width="541" height="30"/>
@@ -1055,7 +1046,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="W1V-iu-Mpx">
-                                                        <rect key="frame" x="0.0" y="39" width="541" height="30"/>
+                                                        <rect key="frame" x="0.0" y="36" width="541" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="蓝牙名称：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EGo-MV-M6R">
                                                                 <rect key="frame" x="0.0" y="0.0" width="413" height="30"/>
@@ -1081,7 +1072,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="7PM-Du-4sl">
-                                                        <rect key="frame" x="0.0" y="78" width="541" height="30"/>
+                                                        <rect key="frame" x="0.0" y="72" width="541" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="MAC：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nxs-oV-TuA">
                                                                 <rect key="frame" x="0.0" y="0.0" width="413" height="30"/>
@@ -1107,7 +1098,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="rds-Wn-ueC">
-                                                        <rect key="frame" x="0.0" y="117.5" width="541" height="30"/>
+                                                        <rect key="frame" x="0.0" y="108" width="541" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="制造商：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UJ9-Bq-FaM">
                                                                 <rect key="frame" x="0.0" y="0.0" width="413" height="30"/>
@@ -1132,8 +1123,34 @@
                                                             </label>
                                                         </subviews>
                                                     </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="sIh-uc-zd0">
+                                                        <rect key="frame" x="0.0" y="144.5" width="541" height="30"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="产品型号：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IeM-uJ-d15">
+                                                                <rect key="frame" x="0.0" y="0.0" width="413" height="30"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vgk-TT-Cfo">
+                                                                <rect key="frame" x="421" y="0.0" width="120" height="30"/>
+                                                                <color key="backgroundColor" red="0.44705882349999998" green="0.45882352939999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="crL-pN-YZa"/>
+                                                                </constraints>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                        <real key="value" value="8"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </label>
+                                                        </subviews>
+                                                    </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="R9t-7U-PLW">
-                                                        <rect key="frame" x="0.0" y="156.5" width="541" height="30"/>
+                                                        <rect key="frame" x="0.0" y="180.5" width="541" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="硬件版本：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vQo-Qj-Tco">
                                                                 <rect key="frame" x="0.0" y="0.0" width="413" height="30"/>
@@ -1159,7 +1176,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="uTu-fr-w58">
-                                                        <rect key="frame" x="0.0" y="195.5" width="541" height="29.5"/>
+                                                        <rect key="frame" x="0.0" y="216.5" width="541" height="29.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="软件版本：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zG8-wf-JMr">
                                                                 <rect key="frame" x="0.0" y="0.0" width="413" height="29.5"/>
@@ -1185,7 +1202,7 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="U7n-rM-dhh">
-                                                        <rect key="frame" x="0.0" y="234" width="541" height="30"/>
+                                                        <rect key="frame" x="0.0" y="252" width="541" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="固件版本：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jNa-IF-01I">
                                                                 <rect key="frame" x="0.0" y="0.0" width="413" height="30"/>
@@ -1212,6 +1229,7 @@
                                                     </stackView>
                                                 </subviews>
                                                 <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="sIh-uc-zd0" secondAttribute="trailing" id="2C8-iq-Yoq"/>
                                                     <constraint firstItem="W1V-iu-Mpx" firstAttribute="leading" secondItem="vf0-ZV-53I" secondAttribute="leading" id="A41-bK-hGz"/>
                                                     <constraint firstAttribute="trailing" secondItem="rds-Wn-ueC" secondAttribute="trailing" id="DBk-uN-c5i"/>
                                                     <constraint firstItem="7PM-Du-4sl" firstAttribute="leading" secondItem="vf0-ZV-53I" secondAttribute="leading" id="Drk-Vt-nA4"/>
@@ -1222,6 +1240,8 @@
                                                     <constraint firstAttribute="trailing" secondItem="W1V-iu-Mpx" secondAttribute="trailing" id="Q6Y-lF-8TG"/>
                                                     <constraint firstItem="eKV-cd-cxH" firstAttribute="leading" secondItem="vf0-ZV-53I" secondAttribute="leading" id="St0-H2-Hzo"/>
                                                     <constraint firstItem="O2p-bO-aYk" firstAttribute="height" secondItem="xb5-x0-IrZ" secondAttribute="height" id="Xoj-aA-hfm"/>
+                                                    <constraint firstItem="Vgk-TT-Cfo" firstAttribute="height" secondItem="xb5-x0-IrZ" secondAttribute="height" id="Xwl-Fq-zb1"/>
+                                                    <constraint firstItem="sIh-uc-zd0" firstAttribute="leading" secondItem="vf0-ZV-53I" secondAttribute="leading" id="YRl-c5-2J9"/>
                                                     <constraint firstItem="U7n-rM-dhh" firstAttribute="leading" secondItem="vf0-ZV-53I" secondAttribute="leading" id="Zf6-cs-DwO"/>
                                                     <constraint firstItem="RAp-Cd-6hY" firstAttribute="height" secondItem="xb5-x0-IrZ" secondAttribute="height" id="bmb-tn-ueK"/>
                                                     <constraint firstItem="qlQ-pw-BUo" firstAttribute="height" secondItem="xb5-x0-IrZ" secondAttribute="height" id="h85-PW-1ar"/>
@@ -1256,11 +1276,11 @@
                                         <constraints>
                                             <constraint firstItem="vf0-ZV-53I" firstAttribute="leading" secondItem="504-lB-Zla" secondAttribute="leading" constant="40" id="68a-6v-hdR"/>
                                             <constraint firstItem="0JN-dV-5fH" firstAttribute="width" secondItem="GZ2-EE-9pY" secondAttribute="width" id="Jzm-uL-u6a"/>
-                                            <constraint firstItem="0JN-dV-5fH" firstAttribute="top" secondItem="vf0-ZV-53I" secondAttribute="bottom" constant="20" id="WdW-cC-nX4"/>
+                                            <constraint firstItem="0JN-dV-5fH" firstAttribute="top" secondItem="vf0-ZV-53I" secondAttribute="bottom" constant="16" id="WdW-cC-nX4"/>
                                             <constraint firstAttribute="trailing" secondItem="vf0-ZV-53I" secondAttribute="trailing" constant="40" id="a3z-Vw-a0y"/>
                                             <constraint firstItem="0JN-dV-5fH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="504-lB-Zla" secondAttribute="leading" constant="20" symbolic="YES" id="bsC-7H-Wqf"/>
                                             <constraint firstAttribute="bottom" secondItem="0JN-dV-5fH" secondAttribute="bottom" constant="40" id="ebC-85-xKK"/>
-                                            <constraint firstItem="vf0-ZV-53I" firstAttribute="top" secondItem="504-lB-Zla" secondAttribute="top" constant="30" id="pI6-Tc-yaZ"/>
+                                            <constraint firstItem="vf0-ZV-53I" firstAttribute="top" secondItem="504-lB-Zla" secondAttribute="top" constant="16" id="pI6-Tc-yaZ"/>
                                             <constraint firstItem="0JN-dV-5fH" firstAttribute="trailing" secondItem="vf0-ZV-53I" secondAttribute="trailing" id="uMe-wY-Rrf"/>
                                         </constraints>
                                     </view>
@@ -1334,6 +1354,7 @@
                         <outlet property="manufacturerLabel" destination="O3t-gU-OOO" id="maS-8c-atO"/>
                         <outlet property="motorStateLabel" destination="DVK-3Q-tDO" id="ZLp-lJ-4oa"/>
                         <outlet property="motorTestLabel" destination="QaT-dp-hr6" id="gYw-iB-L5n"/>
+                        <outlet property="productLabel" destination="Vgk-TT-Cfo" id="tFd-xf-eXA"/>
                         <outlet property="rightBoxView" destination="hVL-Ti-Rx7" id="IWp-eJ-XE7"/>
                         <outlet property="rightBtn" destination="FMa-l3-ctW" id="f9T-8T-8q0"/>
                         <outlet property="sensorBtn" destination="scZ-mo-DRP" id="vgJ-66-LhL"/>
@@ -1368,7 +1389,6 @@
     </scenes>
     <resources>
         <image name="icon_export" width="24" height="24"/>
-        <image name="icon_ok" width="20" height="20"/>
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

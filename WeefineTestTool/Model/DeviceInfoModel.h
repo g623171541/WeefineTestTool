@@ -18,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 制造商
 @property (nonatomic, strong) NSString *manufacturer;
-
 /// 连接时间
 @property (nonatomic, strong) NSString *time;
 /// 设备的mac地址
@@ -35,9 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *product;
 
 
-/// 水压
-@property (nonatomic, assign) NSInteger waterPressure;
-/// 水温
+/// 水压，收到的数据➗10，保留一位小数
+@property (nonatomic, assign) CGFloat waterPressure;
+/// 温度 需要/100保留两位
 @property (nonatomic, assign) CGFloat temperature;
 /// 气压
 @property (nonatomic, assign) NSInteger gasPressure;

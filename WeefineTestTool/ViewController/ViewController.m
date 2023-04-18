@@ -10,6 +10,9 @@
 #define kKeyTitle(key)          [NSString stringWithFormat:@"%@按键测试", key]
 #define kKeyShortTitle(key)     [NSString stringWithFormat:@"短按三下%@按键", key]
 #define kKeyLongTitle(key)      [NSString stringWithFormat:@"长按一下%@按键", key]
+#define kSuccessNextTime        3.0
+#define kImageOK                [UIImage imageNamed:@"icon_ok"]
+#define kImageNC                [UIImage imageNamed:@"icon_error"]
 
 typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     PDPhysicalButtonTypeLeftShort       =   0x10,   // 左-短按
@@ -37,7 +40,6 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 @property (nonatomic, strong) DeviceInfoModel *deviceInfoModel;
 /// 蓝牙外设设备列表
 @property (nonatomic, strong) NSMutableArray <CBPeripheral *>*peripheralArrM;
-@property (nonatomic, strong) NSMutableDictionary *dicM;
 @end
 
 @implementation ViewController
@@ -60,16 +62,11 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 //            self.step = 0;
 //        }
 //    }];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.dicM setValue:@"123" forKey:@"soft"];
-    });
 }
 
 /// 初始化数据
 - (void)initData {
     self.deviceInfoModel = [[DeviceInfoModel alloc] init];
-    self.dicM = [NSMutableDictionary dictionary];
     self.stackViewArray = @[self.stackView0, self.stackView1, self.stackView2, self.stackView3, self.stackView4, self.stackView5, self.stackView6, self.stackView7, self.stackView8, self.stackView9];
     self.stepDetailViewArray = @[self.tableView, self.deviceInfoView, self.sensorView, self.keyView, self.leakView, self.turnOffView];
     self.keyTitleDic = @{@"3":@[kKeyTitle(@"快门"), kKeyShortTitle(@"快门"), kKeyLongTitle(@"快门")],
@@ -156,6 +153,12 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
         NSLog(@"制造商：%@", manufacturer);
         self.deviceInfoModel.manufacturer = manufacturer;
     };
+    // !!!: 产品型号回调
+    [PDBluetoothManager shareInstance].productModelCharacteristic = ^(NSString * _Nonnull product) {
+        @strongify(self);
+        NSLog(@"产品型号：%@", product);
+        self.deviceInfoModel.product = product;
+    };
     // !!!: 硬件版本回调
     [PDBluetoothManager shareInstance].hardwareInformationCharacteristic = ^(NSString * _Nonnull hardware) {
         @strongify(self);
@@ -236,6 +239,7 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     RAC(self.bleNameLabel, text) = RACObserve(self.deviceInfoModel, name);
     RAC(self.macLabel, text) = RACObserve(self.deviceInfoModel, mac);
     RAC(self.manufacturerLabel, text) = RACObserve(self.deviceInfoModel, manufacturer);
+    RAC(self.productLabel, text) = RACObserve(self.deviceInfoModel, product);
     RAC(self.hardwareLabel, text) = RACObserve(self.deviceInfoModel, hardware);
     RAC(self.softwareLabel, text) = RACObserve(self.deviceInfoModel, software);
     RAC(self.firmwareLabel, text) = RACObserve(self.deviceInfoModel, firmware);
@@ -264,9 +268,15 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
         }
     }];
     
-    [RACObserve(self, dicM) subscribeNext:^(id  _Nullable x) {
-        NSLog(@"监听到改变：%@", x);
+    // RAC压缩组合监听下一步
+    [[[RACSignal zip:@[RACObserve(self.deviceInfoModel, name), RACObserve(self.deviceInfoModel, mac), RACObserve(self.deviceInfoModel, manufacturer), RACObserve(self.deviceInfoModel, software), RACObserve(self.deviceInfoModel, hardware), RACObserve(self.deviceInfoModel, firmware), RACObserve(self.deviceInfoModel, product)]] skip:1] subscribeNext:^(RACTuple * _Nullable x) {
+        [self.connectBtn setImage:kImageOK forState:UIControlStateNormal];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kSuccessNextTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.step++;
+        });
     }];
+    
+    
 }
 
 #pragma mark - 事件
@@ -276,6 +286,7 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     if (tag == 1001) {
         // 设备信息页面中的下一步
         self.step++;
+        [self.connectBtn setImage:kImageNC forState:UIControlStateNormal];
     } else if (tag == 1002) {
         // 传感器测试下一步
     } else if (tag == 1003) {

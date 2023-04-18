@@ -62,6 +62,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *macLabel;
 /// 制造商
 @property (weak, nonatomic) IBOutlet UILabel *manufacturerLabel;
+/// 产品型号
+@property (weak, nonatomic) IBOutlet UILabel *productLabel;
 /// 硬件
 @property (weak, nonatomic) IBOutlet UILabel *hardwareLabel;
 /// 软件

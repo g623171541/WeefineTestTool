@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void(^discoverPeripheral)(NSArray *peripheralArr);
 /// 制造商信息
 @property (nonatomic, copy) void(^manufacturerInformationCharacteristic)(NSString *manufacturer);
+/// 产品型号
+@property (nonatomic, copy) void(^productModelCharacteristic)(NSString *product);
 /// 电池信息
 @property (nonatomic, copy) void(^batteryCharacteristic)(NSInteger battery);
 /// 当前点击按键
