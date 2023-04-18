@@ -11,6 +11,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 大小端转换
+#define Tranverse16(X)  ((((UInt16)(X) & 0xff00) >> 8) |(((UInt16)(X) & 0x00ff) << 8))
+#define Tranverse32(X)  ((((UInt32)(X) & 0xff000000) >> 24) | (((UInt32)(X) & 0x00ff0000) >> 8) | (((UInt32)(X) & 0x0000ff00) << 8) | (((UInt32)(X) & 0x000000ff) << 24))
+#define Tranverse64(X)  ((((UInt64)(X) & 0xff00000000000000) >> 56) | (((UInt64)(X) & 0x00ff000000000000) >> 40) | (((UInt64)(X) & 0x0000ff0000000000) >> 24) | (((UInt64)(X) & 0x000000ff00000000) >> 8) | (((UInt64)(X) & 0x00000000ff000000) << 8) | (((UInt64)(X) & 0x0000000000ff0000) << 24) | (((UInt64)(X) & 0x000000000000ff00) << 40) | (((UInt64)(X) & 0x00000000000000ff) << 56))
+
 @interface PDBluetoothManager : NSObject<CBCentralManagerDelegate,CBPeripheralDelegate>
 
 /// 中央管理对象
@@ -41,8 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void(^productModelCharacteristic)(NSString *product);
 /// 电池信息
 @property (nonatomic, copy) void(^batteryCharacteristic)(NSInteger battery);
-/// 当前点击按键
-@property (nonatomic, copy) void(^buttonCharacteristic)(NSString *);
+/// 当前按键
+@property (nonatomic, copy) void(^buttonCharacteristic)(int);
 /// 硬件版本
 @property (nonatomic, copy) void(^hardwareInformationCharacteristic)(NSString *hardware);
 /// 软件版本
@@ -54,13 +59,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// 温度
 @property (nonatomic, copy) void(^temperatureCharacteristic)(float);
 /// 气压
-@property (nonatomic, copy) void(^gasPressureCharacteristic)(float);
+@property (nonatomic, copy) void(^gasPressureCharacteristic)(int);
 /// 漏水
 @property (nonatomic, copy) void(^leakCharacteristic)(BOOL);
 
 + (instancetype)shareInstance;
 
 - (void)stopScan;
+
+/// 读取传感器数据：水压、气压、温度
+- (void)readSenseValue;
 
 @end
 

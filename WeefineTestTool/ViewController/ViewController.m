@@ -40,6 +40,10 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 @property (nonatomic, strong) DeviceInfoModel *deviceInfoModel;
 /// 蓝牙外设设备列表
 @property (nonatomic, strong) NSMutableArray <CBPeripheral *>*peripheralArrM;
+/// 短按按键次数
+@property (nonatomic, assign) NSInteger shortPressTimes;
+/// 长按按键次数
+@property (nonatomic, assign) NSInteger longPressTimes;
 @end
 
 @implementation ViewController
@@ -50,7 +54,7 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     // 马达状态：已打开、已抽气完成、已正常关闭、超时打开
     
     // 初始化数据
-    [self initData];
+    [self setupData];
     // 添加观察者
     [self addObserver];
     // 加载蓝牙模块
@@ -65,8 +69,10 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 }
 
 /// 初始化数据
-- (void)initData {
+- (void)setupData {
     self.deviceInfoModel = [[DeviceInfoModel alloc] init];
+    self.shortPressTimes = 0;
+    self.longPressTimes = 0;
     self.stackViewArray = @[self.stackView0, self.stackView1, self.stackView2, self.stackView3, self.stackView4, self.stackView5, self.stackView6, self.stackView7, self.stackView8, self.stackView9];
     self.stepDetailViewArray = @[self.tableView, self.deviceInfoView, self.sensorView, self.keyView, self.leakView, self.turnOffView];
     self.keyTitleDic = @{@"3":@[kKeyTitle(@"快门"), kKeyShortTitle(@"快门"), kKeyLongTitle(@"快门")],
@@ -75,6 +81,10 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
                          @"6":@[kKeyTitle(@"左"), kKeyShortTitle(@"左"), kKeyLongTitle(@"左")],
                          @"7":@[kKeyTitle(@"右"), kKeyShortTitle(@"右"), kKeyLongTitle(@"右")]};
     self.step = 0;
+}
+
+- (void)setupUI {
+    
 }
 
 /// 确实发现外设
@@ -133,11 +143,35 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     // !!!: 连接断开
     [PDBluetoothManager shareInstance].didDisconnectPeripheral = ^(NSString *name) {
         [MBProgressHUD showError:[NSString stringWithFormat:@"%@：%@",LocalizedString(@"连接已断开"), name]];
+        @strongify(self);
+        self.deviceInfoModel = [[DeviceInfoModel alloc] init];
     };
     
     // !!!: 按键信息回调
-    [PDBluetoothManager shareInstance].buttonCharacteristic = ^(NSString *buttonString) {
-        NSLog(@"按下了按键-【按键编号:%@】",buttonString);
+    [PDBluetoothManager shareInstance].buttonCharacteristic = ^(int value) {
+        NSLog(@"按下了按键-【按键编号:%x】", value);
+        @strongify(self);
+        if (value == PDPhysicalButtonTypeShutterShort && self.step == 3) {
+            self.shortPressTimes++;
+        } else if (value == PDPhysicalButtonTypeShutterLong && self.step == 3) {
+            self.longPressTimes++;
+        } else if (value == PDPhysicalButtonTypeUpShort && self.step == 4) {
+            self.shortPressTimes++;
+        } else if (value == PDPhysicalButtonTypeUpLong && self.step == 4) {
+            self.longPressTimes++;
+        } else if (value == PDPhysicalButtonTypeDownShort && self.step == 5) {
+            self.shortPressTimes++;
+        } else if (value == PDPhysicalButtonTypeDownLong && self.step == 5) {
+            self.longPressTimes++;
+        } else if (value == PDPhysicalButtonTypeLeftShort && self.step == 6) {
+            self.shortPressTimes++;
+        } else if (value == PDPhysicalButtonTypeLeftLong && self.step == 6) {
+            self.longPressTimes++;
+        } else if (value == PDPhysicalButtonTypeRightShort && self.step == 7) {
+            self.shortPressTimes++;
+        } else if (value == PDPhysicalButtonTypeRightLong && self.step == 7) {
+            self.longPressTimes++;
+        }
     };
     
     // !!!: 电池信息回调
@@ -180,56 +214,23 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     // !!!: 水压
     [PDBluetoothManager shareInstance].waterPressureCharacteristic = ^(float water) {
         NSLog(@"当前水压：%f", water);
+        self.deviceInfoModel.waterPressure = water;
     };
     // !!!: 气压
-    [PDBluetoothManager shareInstance].gasPressureCharacteristic = ^(float gas) {
-        NSLog(@"当前气压：%f", gas);
+    [PDBluetoothManager shareInstance].gasPressureCharacteristic = ^(int gas) {
+        NSLog(@"当前气压：%d", gas);
+        self.deviceInfoModel.gasPressure = gas;
     };
     // !!!: 温度
     [PDBluetoothManager shareInstance].temperatureCharacteristic = ^(float temperature) {
         NSLog(@"当前温度：%f", temperature);
+        self.deviceInfoModel.temperature = temperature;
     };
     // !!!: 漏水检测
     [PDBluetoothManager shareInstance].leakCharacteristic = ^(BOOL leak) {
         NSLog(@"当前是否漏水：%d", leak);
     };
     
-}
-
-#pragma mark - 按键事件处理
-/// 点击拍照事件
-- (void)click0TakePhotoEvent {
-    NSLog(@"【点击】点击拍照事件");
-}
-
-/// 点击对焦事件
-- (void)click1DiveMFOrAFEvent {
-    NSLog(@"【点击】点击对焦事件");
-}
-
-/// 点击模式/返回事件
-- (void)click2ModeBackEvent {
-    NSLog(@"【点击】点击模式");
-}
-
-/// 点击上一个/深度事件
-- (void)click3UpDepthEvent {
-    NSLog(@"【点击】点击上一个");
-}
-
-/// 点击菜单/OK事件
-- (void)click4MenuOkEvent:(BOOL)isTouchScreen {
-    NSLog(@"【点击】点击菜单/OK事件");
-}
-
-/// 点击下一个/滤镜事件
-- (void)click5DownFilterEvent {
-    NSLog(@"【点击】点击下一个");
-}
-
-/// 长按对焦事件
-- (void)click6DiveMFOrAFLongEvent {
-    NSLog(@"【点击】长按对焦事件");
 }
 
 #pragma mark - 添加观察者
@@ -243,6 +244,21 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     RAC(self.hardwareLabel, text) = RACObserve(self.deviceInfoModel, hardware);
     RAC(self.softwareLabel, text) = RACObserve(self.deviceInfoModel, software);
     RAC(self.firmwareLabel, text) = RACObserve(self.deviceInfoModel, firmware);
+    RAC(self.waterPressureLabel, text) = [RACObserve(self.deviceInfoModel, waterPressure) map:^id _Nullable(NSNumber *value) {
+        return [NSString stringWithFormat:@"%.1f", value.floatValue];
+    }];
+    RAC(self.temperatureLabel, text) = [RACObserve(self.deviceInfoModel, temperature) map:^id _Nullable(NSNumber *value) {
+        return [NSString stringWithFormat:@"%.2f", value.floatValue];
+    }];
+    RAC(self.gasPressureLabel, text) = [RACObserve(self.deviceInfoModel, gasPressure) map:^id _Nullable(NSNumber *value) {
+        return [NSString stringWithFormat:@"%@", value];
+    }];
+    RAC(self.shortTimesLabel, text) = [RACObserve(self, shortPressTimes) map:^id _Nullable(NSNumber *value) {
+        return [NSString stringWithFormat:@"%@", value];
+    }];
+    RAC(self.longTimesLabel, text) = [RACObserve(self, longPressTimes) map:^id _Nullable(NSNumber *value) {
+        return [NSString stringWithFormat:@"%@", value];
+    }];
     // 根据步骤切换UI
     [RACObserve(self, step) subscribeNext:^(NSNumber *x) {
         @strongify(self);
@@ -266,16 +282,57 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
             self.shortTitleLabel.text = [self.keyTitleDic[dicKey] objectAtIndex:1];
             self.longTitleLabel.text = [self.keyTitleDic[dicKey] objectAtIndex:2];
         }
+        // 传感器测试
+        if (x.intValue == 2) {
+            [[PDBluetoothManager shareInstance] readSenseValue];
+        }
     }];
     
-    // RAC压缩组合监听下一步
+    // RAC压缩组合监听【设备信息】
     [[[RACSignal zip:@[RACObserve(self.deviceInfoModel, name), RACObserve(self.deviceInfoModel, mac), RACObserve(self.deviceInfoModel, manufacturer), RACObserve(self.deviceInfoModel, software), RACObserve(self.deviceInfoModel, hardware), RACObserve(self.deviceInfoModel, firmware), RACObserve(self.deviceInfoModel, product)]] skip:1] subscribeNext:^(RACTuple * _Nullable x) {
         [self.connectBtn setImage:kImageOK forState:UIControlStateNormal];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kSuccessNextTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             self.step++;
         });
     }];
-    
+    // RAC压缩组合监听【传感器信息】
+    [[[RACSignal zip:@[RACObserve(self.deviceInfoModel, waterPressure), RACObserve(self.deviceInfoModel, temperature), RACObserve(self.deviceInfoModel, gasPressure)]] skip:1] subscribeNext:^(RACTuple * _Nullable x) {
+        [self.sensorBtn setImage:kImageOK forState:UIControlStateNormal];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kSuccessNextTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.step++;
+        });
+    }];
+    // RAC压缩组合监听【按键检测】
+    [[[RACSignal combineLatest:@[RACObserve(self, shortPressTimes), RACObserve(self, longPressTimes)] reduce:^id _Nonnull (NSNumber *shortPressTimes, NSNumber *longPressTimes){
+        BOOL success = shortPressTimes.intValue >= 3 && longPressTimes.intValue >= 1;
+        return @(success);
+    }]  skip:1] subscribeNext:^(id  _Nullable x) {
+        if ([x boolValue]) {
+            UIButton *button;
+            if (self.step == 3) {
+                button = self.shutterBtn;
+                self.deviceInfoModel.shutter = kTestResultOK;
+            } else if (self.step == 4) {
+                button = self.topBtn;
+                self.deviceInfoModel.up = kTestResultOK;
+            } else if (self.step == 5) {
+                button = self.bottomBtn;
+                self.deviceInfoModel.down = kTestResultOK;
+            } else if (self.step == 6) {
+                button = self.leftBtn;
+                self.deviceInfoModel.left = kTestResultOK;
+            } else if (self.step == 7) {
+                button = self.rightBtn;
+                self.deviceInfoModel.right = kTestResultOK;
+            }
+            [button setImage:kImageOK forState:UIControlStateNormal];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kSuccessNextTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.step++;
+                self.shortPressTimes = 0;
+                self.longPressTimes = 0;
+            });
+        }
+    }];
     
 }
 
@@ -289,13 +346,33 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
         [self.connectBtn setImage:kImageNC forState:UIControlStateNormal];
     } else if (tag == 1002) {
         // 传感器测试下一步
+        [self.sensorBtn setImage:kImageNC forState:UIControlStateNormal];
     } else if (tag == 1003) {
         // 按键测试下一步
+        if (self.step == 3) {
+            self.deviceInfoModel.shutter = kTestResultNC;
+            [self.shutterBtn setImage:kImageNC forState:UIControlStateNormal];
+        } else if (self.step == 4) {
+            self.deviceInfoModel.up = kTestResultNC;
+            [self.topBtn setImage:kImageNC forState:UIControlStateNormal];
+        } else if (self.step == 5) {
+            self.deviceInfoModel.down = kTestResultNC;
+            [self.bottomBtn setImage:kImageNC forState:UIControlStateNormal];
+        } else if (self.step == 6) {
+            self.deviceInfoModel.left = kTestResultNC;
+            [self.leftBtn setImage:kImageNC forState:UIControlStateNormal];
+        } else if (self.step == 7) {
+            self.deviceInfoModel.right = kTestResultNC;
+            [self.rightBtn setImage:kImageNC forState:UIControlStateNormal];
+        }
     } else if (tag == 1008) {
         // 漏水测试下一步
+        self.deviceInfoModel.leak = kTestResultNC;
+        [self.leakBtn setImage:kImageNC forState:UIControlStateNormal];
     } else if (tag == 1009) {
         // 关机，开始下一个产品测试
     }
+    self.step++;
 }
 
 /// 分享文件

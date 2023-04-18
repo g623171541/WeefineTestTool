@@ -14,6 +14,8 @@
 @property (nonatomic, strong) NSTimer *peripheralTimer;
 /// 蓝牙广播数据长度，广播的数据是6字节的MAC地址
 @property (nonatomic, assign) NSInteger advertisementDataLength;
+/// 传感器特征数组，调用方法时读取其值
+@property (nonatomic, strong) NSMutableArray *senseCharacterArrM;
 @end
 
 @implementation PDBluetoothManager
@@ -103,6 +105,15 @@ static dispatch_once_t token = 0;
     self.peripheralTimer = nil;
 }
 
+/// 读取传感器数据：水压、气压、温度
+- (void)readSenseValue {
+    if (self.senseCharacterArrM.count == 3) {
+        for (CBCharacteristic *character in self.senseCharacterArrM) {
+            [self.peripheral readValueForCharacteristic:character];
+        }
+    }
+}
+
 #pragma mark - 清除缓存数据
 - (void)cleanData {
     self.myPeripherals = @[].mutableCopy;
@@ -174,6 +185,7 @@ static dispatch_once_t token = 0;
     self.isFirstActionEvent = YES;
     self.isConnectPeripheral = YES;
     [self cleanData];
+    self.senseCharacterArrM = [NSMutableArray array];
     
     if (self.didConnectPeripheral) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -244,9 +256,6 @@ static dispatch_once_t token = 0;
         } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ButtonCharacteristicUUIDString]]) {
             // 监听按键信息特征
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
-        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:WaterPressureCharacteristicUUIDString]]) {
-            // 读取传感器信息特征
-            [peripheral readValueForCharacteristic:characteristic];
         } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:HardwareInformationCharacteristicUUIDString]]) {
             // 读取硬件信息
             [peripheral readValueForCharacteristic:characteristic];
@@ -256,6 +265,12 @@ static dispatch_once_t token = 0;
         } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:SoftwareInformationCharacteristicUUIDString]]) {
             // 读取软件信息
             [peripheral readValueForCharacteristic:characteristic];
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:WaterPressureCharacteristicUUIDString]]) {
+            [self.senseCharacterArrM addObject:characteristic];
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:GasPressureCharacteristicUUIDString]]) {
+            [self.senseCharacterArrM addObject:characteristic];
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:TemperatureCharacteristicUUIDString]]) {
+            [self.senseCharacterArrM addObject:characteristic];
         }
         NSLog(@"发现特征:%@",[characteristic.UUID UUIDString]);
     }
@@ -302,12 +317,10 @@ static dispatch_once_t token = 0;
     
     // 按键信息特征值
     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ButtonCharacteristicUUIDString]]) {
-        // 潜水设备静态按钮的按键值
-        NSString *staticBtnTagStr = [NSString getStringFromHexByte:(Byte *)characteristic.value.bytes length:(int)characteristic.value.length].uppercaseString;
-        NSLog(@"当前点击按键:%@",staticBtnTagStr);
+        int value = [characteristic.value convertToInt];
         if (self.buttonCharacteristic) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.buttonCharacteristic(staticBtnTagStr);
+                self.buttonCharacteristic(value);
             });
         }
         return;
@@ -315,17 +328,32 @@ static dispatch_once_t token = 0;
     
     // 水压
     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:WaterPressureCharacteristicUUIDString]]) {
-        
+        int value = Tranverse32([characteristic.value convertToInt]);
+        if (self.waterPressureCharacteristic) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.waterPressureCharacteristic(value/10.0);
+            });
+        }
         return;
     }
     // 气压
     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:GasPressureCharacteristicUUIDString]]) {
-        
+        int value = Tranverse32([characteristic.value convertToInt]);
+        if (self.gasPressureCharacteristic) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.gasPressureCharacteristic(value);
+            });
+        }
         return;
     }
     // 温度
     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:TemperatureCharacteristicUUIDString]]) {
-        
+        int value = Tranverse32([characteristic.value convertToInt]);
+        if (self.temperatureCharacteristic) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.temperatureCharacteristic(value/100.0);
+            });
+        }
         return;
     }
     // 漏水
