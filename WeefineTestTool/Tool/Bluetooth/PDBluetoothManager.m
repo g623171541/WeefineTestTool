@@ -16,6 +16,12 @@
 @property (nonatomic, assign) NSInteger advertisementDataLength;
 /// 传感器特征数组，调用方法时读取其值
 @property (nonatomic, strong) NSMutableArray *senseCharacterArrM;
+/// 漏水检测特征
+@property (nonatomic, strong) CBCharacteristic *leakCharacter;
+/// 马达特征
+@property (nonatomic, strong) CBCharacteristic *motorCharacter;
+/// 关机特征
+@property (nonatomic, strong) CBCharacteristic *shutdownCharacter;
 @end
 
 @implementation PDBluetoothManager
@@ -68,7 +74,6 @@ static dispatch_once_t token = 0;
     return instance;
 }
 
-#pragma mark - 销毁单例
 + (void)deleteInstance {
     instance = nil;
     token = 0;
@@ -112,6 +117,27 @@ static dispatch_once_t token = 0;
             [self.peripheral readValueForCharacteristic:character];
         }
     }
+}
+
+/// 开始漏水测试
+- (void)startTestLeak {
+    // 监听漏水
+    [self.peripheral setNotifyValue:YES forCharacteristic:self.leakCharacter];
+    // 监听马达
+    [self.peripheral setNotifyValue:YES forCharacteristic:self.motorCharacter];
+}
+
+/// 打开马达
+/// - Parameter open: 打开还是关闭
+- (void)openMotor:(BOOL )open {
+    NSData *data = [[NSString stringWithFormat:@"%d", open] stringToData];
+    [self.peripheral writeValue:data forCharacteristic:self.motorCharacter type:CBCharacteristicWriteWithoutResponse];
+}
+
+/// 关机
+- (void)shutdownDevice {
+    NSData *data = [@"1" stringToData];
+    [self.peripheral writeValue:data forCharacteristic:self.shutdownCharacter type:CBCharacteristicWriteWithoutResponse];
 }
 
 #pragma mark - 清除缓存数据
@@ -165,8 +191,11 @@ static dispatch_once_t token = 0;
         NSData *advData = [advertisementData valueForKey:@"kCBAdvDataManufacturerData"];
         if (advData.length >= self.advertisementDataLength) {
             // MAC 6Bytes
-//            peripheral.mac = [[advData subdataWithRange:NSMakeRange(0, 6)] convertToHexStr];
-            peripheral.mac = [advData convertToHexStr];
+            if (advData.length == 6) {
+                peripheral.mac = [advData convertToHexStr];
+            } else if (advData.length == 8) {
+                peripheral.mac = [[advData subdataWithRange:NSMakeRange(2, 6)] convertToHexStr];
+            }
         }
         
         if (![self.myPeripherals containsObject:peripheral]) {
@@ -271,6 +300,12 @@ static dispatch_once_t token = 0;
             [self.senseCharacterArrM addObject:characteristic];
         } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:TemperatureCharacteristicUUIDString]]) {
             [self.senseCharacterArrM addObject:characteristic];
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:LeakCharacteristicUUIDString]]) {
+            self.leakCharacter = characteristic;
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:MotorCharacteristicUUIDString]]) {
+            self.motorCharacter = characteristic;
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ShutdownCharacteristicUUIDString]]) {
+            self.shutdownCharacter = characteristic;
         }
         NSLog(@"发现特征:%@",[characteristic.UUID UUIDString]);
     }
@@ -291,7 +326,6 @@ static dispatch_once_t token = 0;
                 self.manufacturerInformationCharacteristic(manufacturer);
             });
         }
-        return;
     }
     // 产品型号特征值
     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ProductModelCharacteristicUUIDString]]) {
@@ -301,7 +335,6 @@ static dispatch_once_t token = 0;
                 self.productModelCharacteristic(product);
             });
         }
-        return;
     }
     
     // 电池信息特征值
@@ -312,7 +345,6 @@ static dispatch_once_t token = 0;
                 self.batteryCharacteristic(battery);
             });
         }
-        return;
     }
     
     // 按键信息特征值
@@ -323,7 +355,6 @@ static dispatch_once_t token = 0;
                 self.buttonCharacteristic(value);
             });
         }
-        return;
     }
     
     // 水压
@@ -334,7 +365,6 @@ static dispatch_once_t token = 0;
                 self.waterPressureCharacteristic(value/10.0);
             });
         }
-        return;
     }
     // 气压
     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:GasPressureCharacteristicUUIDString]]) {
@@ -344,7 +374,6 @@ static dispatch_once_t token = 0;
                 self.gasPressureCharacteristic(value);
             });
         }
-        return;
     }
     // 温度
     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:TemperatureCharacteristicUUIDString]]) {
@@ -354,12 +383,6 @@ static dispatch_once_t token = 0;
                 self.temperatureCharacteristic(value/100.0);
             });
         }
-        return;
-    }
-    // 漏水
-    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:LeakCharacteristicUUIDString]]) {
-        
-        return;
     }
     
     // 硬件信息特征值
@@ -370,7 +393,6 @@ static dispatch_once_t token = 0;
                 self.hardwareInformationCharacteristic(hardware);
             });
         }
-        return;
     }
     
     // 软件信息特征值
@@ -381,7 +403,6 @@ static dispatch_once_t token = 0;
                 self.softwareInformationCharacteristic(software);
             });
         }
-        return;
     }
     
     // 固件信息特征值
@@ -392,7 +413,24 @@ static dispatch_once_t token = 0;
                 self.firmwareInformationCharacteristic(firmware);
             });
         }
-        return;
+    }
+    
+    // 漏水
+    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:LeakCharacteristicUUIDString]]) {
+        if (self.leakCharacteristic) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.leakCharacteristic([characteristic.value convertToInt] != 0);
+            });
+        }
+    }
+    
+    // 马达状态
+    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:MotorCharacteristicUUIDString]]) {
+        if (self.motorCharacteristic) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.motorCharacteristic([characteristic.value convertToInt]);
+            });
+        }
     }
 }
 

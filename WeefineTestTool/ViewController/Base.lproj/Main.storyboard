@@ -1082,22 +1082,24 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="打开马达" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QaT-dp-hr6">
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HGW-Z7-Lpd">
                                                                 <rect key="frame" x="421" y="0.0" width="120" height="36"/>
-                                                                <color key="backgroundColor" red="0.44705882349999998" green="0.45882352939999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="PX1-XO-rfD"/>
-                                                                    <constraint firstAttribute="height" constant="36" id="iAa-V7-U8K"/>
+                                                                    <constraint firstAttribute="height" constant="36" id="UBS-bS-V3K"/>
+                                                                    <constraint firstAttribute="width" constant="120" id="pZi-qy-cVi"/>
                                                                 </constraints>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <nil key="highlightedColor"/>
+                                                                <state key="normal" title="Button"/>
+                                                                <buttonConfiguration key="configuration" style="plain" title="打开马达"/>
                                                                 <userDefinedRuntimeAttributes>
                                                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="8"/>
+                                                                        <real key="value" value="18"/>
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
-                                                            </label>
+                                                                <connections>
+                                                                    <action selector="clickMotor:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LJw-m3-8uJ"/>
+                                                                </connections>
+                                                            </button>
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="s3U-Kj-YoE">
@@ -1201,7 +1203,7 @@
                                             <constraint firstItem="IR9-I8-DfV" firstAttribute="leading" secondItem="2YO-es-ffL" secondAttribute="leading" constant="40" id="EsI-oW-FYi"/>
                                             <constraint firstItem="NEl-wt-JGZ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="2YO-es-ffL" secondAttribute="leading" constant="20" symbolic="YES" id="NB5-qV-l26"/>
                                             <constraint firstItem="IR9-I8-DfV" firstAttribute="top" secondItem="2YO-es-ffL" secondAttribute="top" constant="30" id="SbP-Gu-vHm"/>
-                                            <constraint firstItem="NEl-wt-JGZ" firstAttribute="width" secondItem="QaT-dp-hr6" secondAttribute="width" id="aNl-Nk-uR0"/>
+                                            <constraint firstItem="NEl-wt-JGZ" firstAttribute="width" secondItem="HGW-Z7-Lpd" secondAttribute="width" id="WdH-XS-I1a"/>
                                             <constraint firstAttribute="bottom" secondItem="NEl-wt-JGZ" secondAttribute="bottom" constant="40" id="lgX-yr-xgI"/>
                                         </constraints>
                                     </view>
@@ -1226,28 +1228,30 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="长按关机" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YKC-fV-dpG">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="关机测试" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YKC-fV-dpG">
                                                                 <rect key="frame" x="16" y="0.0" width="397" height="36"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="关" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yFs-R9-Fdn">
+                                                            <button opaque="NO" tag="1009" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vuy-SN-Mxx">
                                                                 <rect key="frame" x="421" y="0.0" width="120" height="36"/>
-                                                                <color key="backgroundColor" red="0.44705882349999998" green="0.45882352939999999" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="JW2-BP-siN"/>
-                                                                    <constraint firstAttribute="height" constant="36" id="VI2-Rl-q4R"/>
+                                                                    <constraint firstAttribute="height" constant="36" id="7tG-qi-Aih"/>
+                                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="AgW-fu-DYL"/>
                                                                 </constraints>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <nil key="highlightedColor"/>
+                                                                <state key="normal" title="Button"/>
+                                                                <buttonConfiguration key="configuration" style="plain" title="关机"/>
                                                                 <userDefinedRuntimeAttributes>
                                                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="8"/>
+                                                                        <real key="value" value="18"/>
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
-                                                            </label>
+                                                                <connections>
+                                                                    <action selector="clickShutdown:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SHc-wj-GrU"/>
+                                                                </connections>
+                                                            </button>
                                                         </subviews>
                                                     </stackView>
                                                 </subviews>
@@ -1353,7 +1357,7 @@
                         <outlet property="macLabel" destination="qlQ-pw-BUo" id="Sbc-xp-ldi"/>
                         <outlet property="manufacturerLabel" destination="O3t-gU-OOO" id="maS-8c-atO"/>
                         <outlet property="motorStateLabel" destination="DVK-3Q-tDO" id="ZLp-lJ-4oa"/>
-                        <outlet property="motorTestLabel" destination="QaT-dp-hr6" id="gYw-iB-L5n"/>
+                        <outlet property="motorTestBtn" destination="HGW-Z7-Lpd" id="UQT-4L-FOa"/>
                         <outlet property="productLabel" destination="Vgk-TT-Cfo" id="tFd-xf-eXA"/>
                         <outlet property="rightBoxView" destination="hVL-Ti-Rx7" id="IWp-eJ-XE7"/>
                         <outlet property="rightBtn" destination="FMa-l3-ctW" id="f9T-8T-8q0"/>
@@ -1362,6 +1366,7 @@
                         <outlet property="shortTimesLabel" destination="53v-wd-jwy" id="DJw-1t-5lS"/>
                         <outlet property="shortTitleLabel" destination="TzM-4a-tbD" id="AHy-jo-hEK"/>
                         <outlet property="shutdownBtn" destination="IW0-uO-Ff2" id="OLz-S1-Zgx"/>
+                        <outlet property="shutdownButton" destination="vuy-SN-Mxx" id="fPF-Mp-3zX"/>
                         <outlet property="shutterBtn" destination="18G-W9-WKK" id="CQa-0Y-tOm"/>
                         <outlet property="softwareLabel" destination="WZd-OT-kqm" id="DUn-fE-dp1"/>
                         <outlet property="stackView0" destination="tvW-Cf-s4l" id="Btc-UP-R8Y"/>
@@ -1377,7 +1382,6 @@
                         <outlet property="tableView" destination="m5W-aU-cH1" id="VBo-2r-cjM"/>
                         <outlet property="temperatureLabel" destination="BbR-9G-ks4" id="OrC-vZ-NkB"/>
                         <outlet property="topBtn" destination="Org-vN-YpG" id="LF2-U6-yoS"/>
-                        <outlet property="turnOffLabel" destination="yFs-R9-Fdn" id="Gkd-b2-RKo"/>
                         <outlet property="turnOffView" destination="elG-Tw-9q1" id="0Mv-C0-whK"/>
                         <outlet property="waterPressureLabel" destination="1Ux-Xw-uOE" id="iKA-vo-WoT"/>
                     </connections>

@@ -44,17 +44,22 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 @property (nonatomic, assign) NSInteger shortPressTimes;
 /// 长按按键次数
 @property (nonatomic, assign) NSInteger longPressTimes;
+/// 漏水测试结果，保存格式为010，0代表不漏水，1代表漏水
+@property (nonatomic, strong) NSString *leakResultStr;
+/// 马达测试结果
+@property (nonatomic, strong) NSString *motorResultStr;
+/// 已经发送关机指令
+@property (nonatomic, assign) BOOL alreadySendShutdown;
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // 马达状态：已打开、已抽气完成、已正常关闭、超时打开
-    
     // 初始化数据
     [self setupData];
+    // 初始化UI
+    [self setupUI];
     // 添加观察者
     [self addObserver];
     // 加载蓝牙模块
@@ -71,8 +76,11 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 /// 初始化数据
 - (void)setupData {
     self.deviceInfoModel = [[DeviceInfoModel alloc] init];
+    self.leakResultStr = @"";
+    self.motorResultStr = @"";
     self.shortPressTimes = 0;
     self.longPressTimes = 0;
+    self.alreadySendShutdown = NO;
     self.stackViewArray = @[self.stackView0, self.stackView1, self.stackView2, self.stackView3, self.stackView4, self.stackView5, self.stackView6, self.stackView7, self.stackView8, self.stackView9];
     self.stepDetailViewArray = @[self.tableView, self.deviceInfoView, self.sensorView, self.keyView, self.leakView, self.turnOffView];
     self.keyTitleDic = @{@"3":@[kKeyTitle(@"快门"), kKeyShortTitle(@"快门"), kKeyLongTitle(@"快门")],
@@ -80,11 +88,14 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
                          @"5":@[kKeyTitle(@"下"), kKeyShortTitle(@"下"), kKeyLongTitle(@"下")],
                          @"6":@[kKeyTitle(@"左"), kKeyShortTitle(@"左"), kKeyLongTitle(@"左")],
                          @"7":@[kKeyTitle(@"右"), kKeyShortTitle(@"右"), kKeyLongTitle(@"右")]};
-    self.step = 0;
+    self.step = 9;
 }
 
 - (void)setupUI {
-    
+    [self.motorTestBtn setTitle:@"打开马达" forState:UIControlStateNormal];
+    [self.motorTestBtn setTitle:@"关闭马达" forState:UIControlStateSelected];
+    [self.shutdownButton setTitle:@"关机" forState:UIControlStateNormal];
+    [self.shutdownButton setTitle:@"已关机" forState:UIControlStateSelected];
 }
 
 /// 确实发现外设
@@ -144,6 +155,10 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     [PDBluetoothManager shareInstance].didDisconnectPeripheral = ^(NSString *name) {
         [MBProgressHUD showError:[NSString stringWithFormat:@"%@：%@",LocalizedString(@"连接已断开"), name]];
         @strongify(self);
+        if (self.alreadySendShutdown) {
+            self.shutdownButton.selected = YES;
+            [MBProgressHUD showMessage:[NSString stringWithFormat:@"%@已完成测试", self.deviceInfoModel.mac]];
+        }
         self.deviceInfoModel = [[DeviceInfoModel alloc] init];
     };
     
@@ -228,9 +243,14 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     };
     // !!!: 漏水检测
     [PDBluetoothManager shareInstance].leakCharacteristic = ^(BOOL leak) {
+        self.leakResultStr = [NSString stringWithFormat:@"%@%d", self.leakResultStr, leak];
         NSLog(@"当前是否漏水：%d", leak);
     };
-    
+    // !!!: 马达状态
+    [PDBluetoothManager shareInstance].motorCharacteristic = ^(int motorStatus) {
+        self.motorResultStr = [NSString stringWithFormat:@"%@%ld", self.motorResultStr, (long)motorStatus];
+        NSLog(@"当前马达状态：%d", motorStatus);
+    };
 }
 
 #pragma mark - 添加观察者
@@ -259,11 +279,28 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     RAC(self.longTimesLabel, text) = [RACObserve(self, longPressTimes) map:^id _Nullable(NSNumber *value) {
         return [NSString stringWithFormat:@"%@", value];
     }];
+    RAC(self.leakLabel, text) = RACObserve(self, leakResultStr);
+    RAC(self.motorStateLabel, text) = [RACObserve(self, motorResultStr) map:^id _Nullable(NSString * _Nullable value) {
+        if (value.length) {
+            int statue = [[value substringFromIndex:value.length-1] intValue];
+            if (statue == 1) {
+                return @"APP指令打开";
+            } else if (statue == 2) {
+                return @"APP指令关闭";
+            } else if (statue == 2) {
+                return @"抽气完成关闭";
+            } else if (statue == 4) {
+                return @"超时打开";
+            }
+        }
+        return @"初始状态";
+    }];
     // 根据步骤切换UI
     [RACObserve(self, step) subscribeNext:^(NSNumber *x) {
         @strongify(self);
         NSLog(@"当前第几步：%@", x);
         if (x.intValue >= 10) {
+            self.step = 0;
             return;
         }
         for (int i=0; i<self.stackViewArray.count; i++) {
@@ -285,6 +322,8 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
         // 传感器测试
         if (x.intValue == 2) {
             [[PDBluetoothManager shareInstance] readSenseValue];
+        } else if (x.intValue == 8) {
+            [[PDBluetoothManager shareInstance] startTestLeak];
         }
     }];
     
@@ -333,6 +372,16 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
             });
         }
     }];
+    
+    // 漏水检测
+    [[RACObserve(self, leakResultStr) skip:1] subscribeNext:^(id  _Nullable x) {
+        NSLog(@"漏水结果：%@", x);
+    }];
+    // 马达检测
+    [[RACObserve(self, motorResultStr) skip:1] subscribeNext:^(id  _Nullable x) {
+        NSLog(@"马达结果：%@", x);
+    }];
+    // 判断漏水检测这一步骤是否通过
     
 }
 
@@ -388,6 +437,17 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     NSArray *activityItems = @[fileURL];
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
     [self presentViewController:activityVC animated:YES completion:nil];
+}
+
+/// 点击马达
+- (IBAction)clickMotor:(UIButton *)sender {
+    [[PDBluetoothManager shareInstance] openMotor:!sender.selected];
+    sender.selected = !sender.selected;
+}
+/// 点击关机
+- (IBAction)clickShutdown:(UIButton *)sender {
+    [[PDBluetoothManager shareInstance] shutdownDevice];
+    self.alreadySendShutdown = YES;
 }
 
 #pragma mark - UITableViewDelegate

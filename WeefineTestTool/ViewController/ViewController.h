@@ -101,7 +101,7 @@
 /// 漏水测试
 @property (weak, nonatomic) IBOutlet UIView *leakView;
 /// 马达测试
-@property (weak, nonatomic) IBOutlet UILabel *motorTestLabel;
+@property (weak, nonatomic) IBOutlet UIButton *motorTestBtn;
 /// 漏水检测
 @property (weak, nonatomic) IBOutlet UILabel *leakLabel;
 /// 马达状态
@@ -110,8 +110,8 @@
 // !!!: 关机
 /// 关机
 @property (weak, nonatomic) IBOutlet UIView *turnOffView;
-/// 关机右侧Label
-@property (weak, nonatomic) IBOutlet UILabel *turnOffLabel;
+/// 关机右侧按钮
+@property (weak, nonatomic) IBOutlet UIButton *shutdownButton;
 
 @end
 

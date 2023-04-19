@@ -62,6 +62,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void(^gasPressureCharacteristic)(int);
 /// 漏水
 @property (nonatomic, copy) void(^leakCharacteristic)(BOOL);
+/// 马达状态
+/// 0x00    当前是初始状态（>90Kpa）
+/// 0x01    当前马达已经被APP指令打开
+/// 0x02    当前马达已经被APP指令关闭
+/// 0x03    当前马达是正常抽气完成关闭
+/// 0x04    当前马达打开超时(60S)关闭
+@property (nonatomic, copy) void(^motorCharacteristic)(int);
 
 + (instancetype)shareInstance;
 
@@ -69,6 +76,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 读取传感器数据：水压、气压、温度
 - (void)readSenseValue;
+/// 开始漏水测试
+- (void)startTestLeak;
+/// 打开马达
+/// - Parameter open: 打开还是关闭
+- (void)openMotor:(BOOL )open;
+/// 关机
+- (void)shutdownDevice;
 
 @end
 
