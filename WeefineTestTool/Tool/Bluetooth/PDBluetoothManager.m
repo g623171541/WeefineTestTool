@@ -108,6 +108,13 @@ static dispatch_once_t token = 0;
         });
     }
 }
+/// 重新开始扫描设备
+- (void)restartScan {
+    // 扫描外围 第一个参数为nil表示扫任何外围
+    [self.centralManager scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey:@YES}];
+}
+
+/// 停止扫描
 - (void)stopScan {
     [self.centralManager stopScan];
     [self.peripheralTimer setFireDate:[NSDate distantFuture]];

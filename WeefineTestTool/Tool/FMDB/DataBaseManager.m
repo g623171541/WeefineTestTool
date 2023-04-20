@@ -46,7 +46,7 @@
     if ([_db open]) {
         if (![_db tableExists:tableName]) {
             // 创建表
-            NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ ('ID' INTEGER PRIMARY KEY AUTOINCREMENT, 'mac' TEXT NOT NULL, 'name' TEXT NOT NULL, 'software' TEXT NOT NULL, 'hardware' TEXT NOT NULL, 'firmware' TEXT NOT NULL, 'product' TEXT NOT NULL, 'waterPressure' INTEGER NOT NULL, 'temperature' REAL NOT NULL, 'gasPressure' INTEGER NOT NULL, 'shutter' TEXT NOT NULL, 'up' TEXT NOT NULL, 'down' TEXT NOT NULL, 'left' TEXT NOT NULL, 'right' TEXT NOT NULL, 'leak' TEXT NOT NULL, 'result' TEXT NOT NULL, 'time' TEXT NOT NULL)", tableName];
+            NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ ('ID' INTEGER PRIMARY KEY AUTOINCREMENT, 'mac' TEXT NOT NULL, 'name' TEXT NOT NULL, 'software' TEXT NOT NULL, 'hardware' TEXT NOT NULL, 'firmware' TEXT NOT NULL, 'product' TEXT NOT NULL, 'waterPressure' INTEGER NOT NULL, 'temperature' REAL NOT NULL, 'gasPressure' INTEGER NOT NULL, 'shutter' TEXT NOT NULL, 'up' TEXT NOT NULL, 'down' TEXT NOT NULL, 'left' TEXT NOT NULL, 'right' TEXT NOT NULL, 'leak' TEXT NOT NULL, 'shutdown' TEXT NOT NULL, 'result' TEXT NOT NULL, 'time' TEXT NOT NULL)", tableName];
             [_db executeUpdate:sql];
         }else{
             NSLog(@"已经有表了，不需要重新添加");
@@ -104,7 +104,7 @@
     //    BOOL result = [db executeUpdateWithFormat:@"insert into 't_student' (ID,name,phone,score) values(%d,%@,%@,%d)",112,@"x3,13",43];
     //3.
     if ([_db open]) {
-        NSString *sqStr = [NSString stringWithFormat:@"insert into '%@' (mac, name, software, hardware, firmware, product, waterPressure, temperature, gasPressure, shutter, up, down, left, right, leak, result, time) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", tableName];
+        NSString *sqStr = [NSString stringWithFormat:@"insert into '%@' (mac, name, software, hardware, firmware, product, waterPressure, temperature, gasPressure, shutter, up, down, left, right, leak, shutdown, result, time) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", tableName];
         [_db executeUpdate:sqStr withArgumentsInArray:@[model.mac ? : @"",
                                                         model.name ? : @"",
                                                         model.software ? : @"",
@@ -120,6 +120,7 @@
                                                         model.left ? : @"",
                                                         model.right ? : @"",
                                                         model.leak ? : @"",
+                                                        model.shutdown ? : @"",
                                                         model.result ? : @"",
                                                         model.time]];
     }
@@ -247,7 +248,7 @@
 - (NSArray <NSString *>*)getTableData:(NSString *)tableName {
     NSMutableArray *dataArrM = [NSMutableArray array];
     
-    NSString *title = @"ID,MAC,蓝牙名称,软件版本,硬件版本,固件版本,产品型号,水压(mbar),水温(­°C),气压(pa),快门按键,上按键,下按键,左按键,右按键,漏水测试,整机测试结果,时间";
+    NSString *title = @"ID,MAC,蓝牙名称,软件版本,硬件版本,固件版本,产品型号,水压(mbar),水温(­°C),气压(pa),快门按键,上按键,下按键,左按键,右按键,漏水测试,关机测试,整机测试结果,时间";
     [dataArrM addObject:title];
     
     [_db open];
@@ -272,6 +273,7 @@
         [dataStrM appendFormat:@"%@,", [result stringForColumn:@"left"]];
         [dataStrM appendFormat:@"%@,", [result stringForColumn:@"right"]];
         [dataStrM appendFormat:@"%@,", [result stringForColumn:@"leak"]];
+        [dataStrM appendFormat:@"%@,", [result stringForColumn:@"shutdown"]];
         [dataStrM appendFormat:@"%@,", [result stringForColumn:@"result"]];
         
         [dataStrM appendFormat:@"%@", [result stringForColumn:@"time"]];

@@ -52,6 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *right;
 /// 漏水测试结果
 @property (nonatomic, strong) NSString *leak;
+/// 关机测试结果
+@property (nonatomic, strong) NSString *shutdown;
 
 /// 总的测试结果
 @property (nonatomic, strong) NSString *result;

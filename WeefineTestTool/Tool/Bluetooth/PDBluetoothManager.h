@@ -71,7 +71,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void(^motorCharacteristic)(int);
 
 + (instancetype)shareInstance;
-
+/// 销毁单例
++ (void)deleteInstance;
+/// 重新开始扫描设备
+- (void)restartScan;
+/// 停止扫描
 - (void)stopScan;
 
 /// 读取传感器数据：水压、气压、温度

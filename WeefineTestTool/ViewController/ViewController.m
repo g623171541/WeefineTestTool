@@ -102,6 +102,15 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     [self.motorTestBtn setTitle:@"关闭马达" forState:UIControlStateSelected];
     [self.shutdownButton setTitle:@"关机" forState:UIControlStateNormal];
     [self.shutdownButton setTitle:@"已关机" forState:UIControlStateSelected];
+    [self.connectBtn setImage:nil forState:UIControlStateNormal];
+    [self.sensorBtn setImage:nil forState:UIControlStateNormal];
+    [self.shutterBtn setImage:nil forState:UIControlStateNormal];
+    [self.topBtn setImage:nil forState:UIControlStateNormal];
+    [self.bottomBtn setImage:nil forState:UIControlStateNormal];
+    [self.leftBtn setImage:nil forState:UIControlStateNormal];
+    [self.rightBtn setImage:nil forState:UIControlStateNormal];
+    [self.leakBtn setImage:nil forState:UIControlStateNormal];
+    [self.shutdownBtn setImage:nil forState:UIControlStateNormal];
 }
 
 /// 确实发现外设
@@ -152,6 +161,11 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     [PDBluetoothManager shareInstance].didConnectPeripheral = ^(NSString *name) {
         @strongify(self);
         NSLog(@"蓝牙名称：%@", name);
+        // tableView移除连接的设备
+        if ([self.peripheralArrM containsObject:[PDBluetoothManager shareInstance].peripheral]) {
+            [self.peripheralArrM removeObject:[PDBluetoothManager shareInstance].peripheral];
+            [self.tableView reloadData];
+        }
         self.step++;
         self.deviceInfoModel.name = name;
         self.deviceInfoModel.mac = [PDBluetoothManager shareInstance].peripheral.mac;
@@ -162,13 +176,20 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
         @strongify(self);
         if (self.alreadySendShutdown) {
             self.shutdownButton.selected = YES;
+            self.deviceInfoModel.shutdown = kTestResultOK;
+            [self.shutdownBtn setImage:kImageOK forState:UIControlStateNormal];
             [MBProgressHUD showMessage:[NSString stringWithFormat:@"%@已完成测试", self.deviceInfoModel.mac]];
             // 写入数据
             [[DataBaseManager sharedFMDataBase] insertModel:self.deviceInfoModel tableName:kTableName];
         } else {
             [MBProgressHUD showError:[NSString stringWithFormat:@"%@：%@",LocalizedString(@"连接已断开"), name]];
         }
-        [self setupData];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self setupData];
+            [self setupUI];
+            [PDBluetoothManager deleteInstance];
+            [self loadBluetoothManager];
+        });
     };
     
     // !!!: 按键信息回调
@@ -352,7 +373,7 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     }];
     // RAC压缩组合监听【按键检测】
     [[[RACSignal combineLatest:@[RACObserve(self, shortPressTimes), RACObserve(self, longPressTimes)] reduce:^id _Nonnull (NSNumber *shortPressTimes, NSNumber *longPressTimes){
-        BOOL success = shortPressTimes.intValue >= 3 && longPressTimes.intValue >= 1;
+        BOOL success = shortPressTimes.intValue == 3 && longPressTimes.intValue == 1;
         return @(success);
     }]  skip:1] subscribeNext:^(id  _Nullable x) {
         if ([x boolValue]) {
@@ -452,6 +473,9 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     } else if (tag == 1009) {
         // 关机，开始下一个产品测试
         [self setupData];
+        // 漏水测试下一步
+        self.deviceInfoModel.shutdown = kTestResultNC;
+        [self.shutdownBtn setImage:kImageNC forState:UIControlStateNormal];
     }
     self.step++;
 }
@@ -513,9 +537,11 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [[PDBluetoothManager shareInstance] stopScan];
-    // 连接到指定外围
-    [[PDBluetoothManager shareInstance].centralManager connectPeripheral:self.peripheralArrM[indexPath.row] options:nil];
+    if (self.peripheralArrM[indexPath.row].mac) {
+        [[PDBluetoothManager shareInstance] stopScan];
+        // 连接到指定外围
+        [[PDBluetoothManager shareInstance].centralManager connectPeripheral:self.peripheralArrM[indexPath.row] options:nil];
+    }
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 0.001f;
