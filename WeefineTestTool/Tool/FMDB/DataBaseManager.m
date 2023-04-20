@@ -29,7 +29,7 @@
     if (self) {
         // 得到数据库
         NSString *doc = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-        NSString *filename = [doc stringByAppendingPathComponent:@"device.sqlite"];
+        NSString *filename = [doc stringByAppendingPathComponent:kSQLFileName];
         // 当数据库文件不存在时会自动创建一个数据库文件。
         if (!_db) {
             _db = [FMDatabase databaseWithPath:filename];
@@ -105,22 +105,22 @@
     //3.
     if ([_db open]) {
         NSString *sqStr = [NSString stringWithFormat:@"insert into '%@' (mac, name, software, hardware, firmware, product, waterPressure, temperature, gasPressure, shutter, up, down, left, right, leak, result, time) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", tableName];
-        [_db executeUpdate:sqStr withArgumentsInArray:@[model.mac,
-                                                        model.name,
-                                                        model.software,
-                                                        model.hardware,
-                                                        model.firmware,
-                                                        model.product,
+        [_db executeUpdate:sqStr withArgumentsInArray:@[model.mac ? : @"",
+                                                        model.name ? : @"",
+                                                        model.software ? : @"",
+                                                        model.hardware ? : @"",
+                                                        model.firmware ? : @"",
+                                                        model.product ? : @"",
                                                         @(model.waterPressure),
                                                         @(model.temperature),
                                                         @(model.gasPressure),
-                                                        model.shutter,
-                                                        model.up,
-                                                        model.down,
-                                                        model.left,
-                                                        model.right,
-                                                        model.leak,
-                                                        model.result,
+                                                        model.shutter ? : @"",
+                                                        model.up ? : @"",
+                                                        model.down ? : @"",
+                                                        model.left ? : @"",
+                                                        model.right ? : @"",
+                                                        model.leak ? : @"",
+                                                        model.result ? : @"",
                                                         model.time]];
     }
     [_db close];
@@ -217,15 +217,12 @@
 }
 
 #pragma mark - 数据库导出成Excel表格
-- (void)exportExcelFile:(NSString *)tableName {
+- (NSString *)exportExcelFileWithTableName:(NSString *)tableName {
     NSArray *dataArr = [self getTableData:tableName];
     // 组装csv字符串
     NSString *csvString = [dataArr componentsJoinedByString:@"\n"];
-    [self writeFile:csvString fileName:kCSVFileName];
-}
-
-/// 写入文件·
-- (void)writeFile:(NSString *)csvString fileName:(NSString *)fileName{
+    
+    // 写文件
     // 创建文件管理器
     NSFileManager *fileManager = [NSFileManager defaultManager];
     // 获取路径
@@ -233,17 +230,17 @@
     // 去除需要的路径
     NSString *documentDirectory = [paths objectAtIndex:0];
     // 获取文件路径
-    NSString *path = [documentDirectory stringByAppendingPathComponent:fileName];
+    NSString *path = [documentDirectory stringByAppendingPathComponent:kCSVFileName];
     if (![fileManager fileExistsAtPath:path]) {
         //创建文件fileName文件名称，contents文件内容，如果开始没有内容可以设置为nil，attributes文件的属性,初始为nil
-        [fileManager createFileAtPath:fileName contents:nil attributes:nil];
+        [fileManager createFileAtPath:kCSVFileName contents:nil attributes:nil];
     }
     
     // 够造为NSData，并使用NSData进行文件的写入。
     NSData *data = [csvString dataUsingEncoding:NSUTF8StringEncoding];
     [data writeToFile:path atomically:YES];
+    return path;
 }
-
 
 /// 获取数据库中表的全部数据
 /// - Parameter tableName: 表名

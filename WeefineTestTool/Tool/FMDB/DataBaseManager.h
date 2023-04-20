@@ -11,8 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// excel表文件名和格式
+// excel文件名和格式
 #define kCSVFileName    @"Weefine.csv"
+// 数据库名字
+#define kSQLFileName    @"device.sqlite"
+// 表名
+#define kTableName      @"device"
 
 @interface DataBaseManager : NSObject
 
@@ -50,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)time_StringToTimestamp:(NSString *)theTime;
 
 #pragma mark - 数据库导出成Excel表格
-- (void)exportExcelFile:(NSString *)tableName;
+- (NSString *)exportExcelFileWithTableName:(NSString *)tableName;
 
 
 

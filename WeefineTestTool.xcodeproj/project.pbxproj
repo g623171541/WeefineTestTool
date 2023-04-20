@@ -35,6 +35,7 @@
 		0369890E29E6559A0090A5CB /* NSString+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Utils.h"; sourceTree = "<group>"; };
 		0369890F29E6559A0090A5CB /* NSData+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Utils.h"; sourceTree = "<group>"; };
 		0369891029E6559A0090A5CB /* NSData+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Utils.m"; sourceTree = "<group>"; };
+		03725D9129F11F0400839597 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		03E19F3929D55CBE00EE47D5 /* WeefineTestTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeefineTestTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03E19F3C29D55CBE00EE47D5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		03E19F3D29D55CBE00EE47D5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -234,6 +235,7 @@
 		34ABE1C928D7A785ED03FFF6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				03725D9129F11F0400839597 /* Social.framework */,
 				6676402DBB238C55D7B356E4 /* Pods_WeefineTestTool.framework */,
 			);
 			name = Frameworks;

@@ -57,6 +57,7 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     // 初始化数据
+    [self initData];
     [self setupData];
     // 初始化UI
     [self setupUI];
@@ -74,13 +75,9 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 }
 
 /// 初始化数据
-- (void)setupData {
-    self.deviceInfoModel = [[DeviceInfoModel alloc] init];
-    self.leakResultStr = @"";
-    self.motorResultStr = @"";
-    self.shortPressTimes = 0;
-    self.longPressTimes = 0;
-    self.alreadySendShutdown = NO;
+- (void)initData {
+    // 创建表
+    [[DataBaseManager sharedFMDataBase] createTable:kTableName];
     self.stackViewArray = @[self.stackView0, self.stackView1, self.stackView2, self.stackView3, self.stackView4, self.stackView5, self.stackView6, self.stackView7, self.stackView8, self.stackView9];
     self.stepDetailViewArray = @[self.tableView, self.deviceInfoView, self.sensorView, self.keyView, self.leakView, self.turnOffView];
     self.keyTitleDic = @{@"3":@[kKeyTitle(@"快门"), kKeyShortTitle(@"快门"), kKeyLongTitle(@"快门")],
@@ -88,7 +85,16 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
                          @"5":@[kKeyTitle(@"下"), kKeyShortTitle(@"下"), kKeyLongTitle(@"下")],
                          @"6":@[kKeyTitle(@"左"), kKeyShortTitle(@"左"), kKeyLongTitle(@"左")],
                          @"7":@[kKeyTitle(@"右"), kKeyShortTitle(@"右"), kKeyLongTitle(@"右")]};
-    self.step = 9;
+}
+
+- (void)setupData {
+    self.deviceInfoModel = [[DeviceInfoModel alloc] init];
+    self.leakResultStr = @"";
+    self.motorResultStr = @"";
+    self.shortPressTimes = 0;
+    self.longPressTimes = 0;
+    self.alreadySendShutdown = NO;
+    self.step = 0;
 }
 
 - (void)setupUI {
@@ -153,13 +159,16 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     
     // !!!: 连接断开
     [PDBluetoothManager shareInstance].didDisconnectPeripheral = ^(NSString *name) {
-        [MBProgressHUD showError:[NSString stringWithFormat:@"%@：%@",LocalizedString(@"连接已断开"), name]];
         @strongify(self);
         if (self.alreadySendShutdown) {
             self.shutdownButton.selected = YES;
             [MBProgressHUD showMessage:[NSString stringWithFormat:@"%@已完成测试", self.deviceInfoModel.mac]];
+            // 写入数据
+            [[DataBaseManager sharedFMDataBase] insertModel:self.deviceInfoModel tableName:kTableName];
+        } else {
+            [MBProgressHUD showError:[NSString stringWithFormat:@"%@：%@",LocalizedString(@"连接已断开"), name]];
         }
-        self.deviceInfoModel = [[DeviceInfoModel alloc] init];
+        [self setupData];
     };
     
     // !!!: 按键信息回调
@@ -375,14 +384,37 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     
     // 漏水检测
     [[RACObserve(self, leakResultStr) skip:1] subscribeNext:^(id  _Nullable x) {
-        NSLog(@"漏水结果：%@", x);
+        NSLog(@"漏水结果 leakResultStr ：%@", x);
     }];
     // 马达检测
     [[RACObserve(self, motorResultStr) skip:1] subscribeNext:^(id  _Nullable x) {
-        NSLog(@"马达结果：%@", x);
+        NSLog(@"马达结果 motorResultStr ：%@", x);
     }];
-    // 判断漏水检测这一步骤是否通过
-    
+    // 判断漏水检测这一步骤是否通过，包括漏水&马达
+    [[[RACSignal combineLatest:@[RACObserve(self, motorResultStr), RACObserve(self, leakResultStr)] reduce:^id _Nonnull (NSString *motorResultStr, NSString *leakResultStr){
+        BOOL success = [motorResultStr containsString:@"012"] && [leakResultStr containsString:@"010"];
+        return @(success);
+    }]  skip:1] subscribeNext:^(id  _Nullable x) {
+        if ([x boolValue]) {
+            self.deviceInfoModel.leak = kTestResultOK;
+            [self.leakBtn setImage:kImageOK forState:UIControlStateNormal];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kSuccessNextTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                self.step++;
+                self.motorResultStr = @"";
+                self.leakResultStr = @"";
+            });
+        }
+    }];
+    // 总的检测结果
+    [[RACSignal combineLatest:@[RACObserve(self.deviceInfoModel, shutter), RACObserve(self.deviceInfoModel, up), RACObserve(self.deviceInfoModel, down), RACObserve(self.deviceInfoModel, left), RACObserve(self.deviceInfoModel, right), RACObserve(self.deviceInfoModel, leak)] reduce:^id _Nonnull (NSString *shutter, NSString *up, NSString *down, NSString *left, NSString *right, NSString *leak){
+        if ([shutter isEqualToString:kTestResultOK] && [up isEqualToString:kTestResultOK] && [down isEqualToString:kTestResultOK] && [left isEqualToString:kTestResultOK] && [right isEqualToString:kTestResultOK] && [leak isEqualToString:kTestResultOK]) {
+            return kTestResultOK;
+        } else {
+            return kTestResultNC;
+        }
+    }] subscribeNext:^(NSString * _Nullable x) {
+        self.deviceInfoModel.result = x;
+    }];
 }
 
 #pragma mark - 事件
@@ -391,7 +423,6 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     NSUInteger tag = sender.tag;
     if (tag == 1001) {
         // 设备信息页面中的下一步
-        self.step++;
         [self.connectBtn setImage:kImageNC forState:UIControlStateNormal];
     } else if (tag == 1002) {
         // 传感器测试下一步
@@ -420,6 +451,7 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
         [self.leakBtn setImage:kImageNC forState:UIControlStateNormal];
     } else if (tag == 1009) {
         // 关机，开始下一个产品测试
+        [self setupData];
     }
     self.step++;
 }
@@ -428,14 +460,16 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
 - (IBAction)shareFile:(UIButton *)sender {
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentsPath error:nil];
-    if (![contents containsObject:kCSVFileName]) {
+    if (![contents containsObject:kSQLFileName]) {
         [MBProgressHUD showMessage:@"暂无可分享的文件"];
         return;
     }
-    NSString *filePath = [documentsPath stringByAppendingPathComponent:kCSVFileName];
+    // 导出数据
+    NSString *filePath = [[DataBaseManager sharedFMDataBase] exportExcelFileWithTableName:kTableName];
     NSURL *fileURL = [NSURL fileURLWithPath:filePath];
     NSArray *activityItems = @[fileURL];
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+    activityVC.excludedActivityTypes = @[];
     [self presentViewController:activityVC animated:YES completion:nil];
 }
 

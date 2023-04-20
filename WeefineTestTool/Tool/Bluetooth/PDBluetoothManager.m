@@ -18,8 +18,10 @@
 @property (nonatomic, strong) NSMutableArray *senseCharacterArrM;
 /// 漏水检测特征
 @property (nonatomic, strong) CBCharacteristic *leakCharacter;
-/// 马达特征
-@property (nonatomic, strong) CBCharacteristic *motorCharacter;
+/// 马达状态特征
+@property (nonatomic, strong) CBCharacteristic *motorNotifyCharacter;
+/// 马达控制特征
+@property (nonatomic, strong) CBCharacteristic *motorWriteCharacter;
 /// 关机特征
 @property (nonatomic, strong) CBCharacteristic *shutdownCharacter;
 @end
@@ -52,8 +54,6 @@ static NSString * const ShutdownCharacteristicUUIDString = @"00001525-1212-EFDE-
 
 // !!!: 传感器服务
 static NSString * const SensorServiceUUIDString = @"00001623-1212-EFDE-1523-785FEABCD123";
-// 马达控制特征 1字节 0x01启动抽气 0x00停止抽气
-static NSString * const MotorCharacteristicUUIDString = @"00001624-1212-EFDE-1523-785FEABCD123";
 // 水压特征
 static NSString * const WaterPressureCharacteristicUUIDString = @"00001625-1212-EFDE-1523-785FEABCD123";
 // 温度特征
@@ -62,6 +62,10 @@ static NSString * const TemperatureCharacteristicUUIDString = @"00001626-1212-EF
 static NSString * const GasPressureCharacteristicUUIDString = @"00001627-1212-EFDE-1523-785FEABCD123";
 // 漏水上报特征
 static NSString * const LeakCharacteristicUUIDString = @"00001628-1212-EFDE-1523-785FEABCD123";
+// 马达状态特征
+static NSString * const MotorNotifyCharacteristicUUIDString = @"00001629-1212-EFDE-1523-785FEABCD123";
+// 马达控制特征 1字节 0x01启动抽气 0x00停止抽气
+static NSString * const MotorWriteCharacteristicUUIDString = @"00001624-1212-EFDE-1523-785FEABCD123";
 
 #pragma mark - BluetoothManager 单例
 static PDBluetoothManager *instance = nil;
@@ -122,22 +126,26 @@ static dispatch_once_t token = 0;
 /// 开始漏水测试
 - (void)startTestLeak {
     // 监听漏水
-    [self.peripheral setNotifyValue:YES forCharacteristic:self.leakCharacter];
+    if (self.leakCharacter) {
+        [self.peripheral setNotifyValue:YES forCharacteristic:self.leakCharacter];
+    }
     // 监听马达
-    [self.peripheral setNotifyValue:YES forCharacteristic:self.motorCharacter];
+    if (self.motorNotifyCharacter) {
+        [self.peripheral setNotifyValue:YES forCharacteristic:self.motorNotifyCharacter];
+    }
 }
 
 /// 打开马达
 /// - Parameter open: 打开还是关闭
 - (void)openMotor:(BOOL )open {
     NSData *data = [[NSString stringWithFormat:@"%d", open] stringToData];
-    [self.peripheral writeValue:data forCharacteristic:self.motorCharacter type:CBCharacteristicWriteWithoutResponse];
+    [self.peripheral writeValue:data forCharacteristic:self.motorWriteCharacter type:CBCharacteristicWriteWithResponse];
 }
 
 /// 关机
 - (void)shutdownDevice {
     NSData *data = [@"1" stringToData];
-    [self.peripheral writeValue:data forCharacteristic:self.shutdownCharacter type:CBCharacteristicWriteWithoutResponse];
+    [self.peripheral writeValue:data forCharacteristic:self.shutdownCharacter type:CBCharacteristicWriteWithResponse];
 }
 
 #pragma mark - 清除缓存数据
@@ -302,12 +310,14 @@ static dispatch_once_t token = 0;
             [self.senseCharacterArrM addObject:characteristic];
         } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:LeakCharacteristicUUIDString]]) {
             self.leakCharacter = characteristic;
-        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:MotorCharacteristicUUIDString]]) {
-            self.motorCharacter = characteristic;
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:MotorWriteCharacteristicUUIDString]]) {
+            self.motorWriteCharacter = characteristic;
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:MotorNotifyCharacteristicUUIDString]]) {
+            self.motorNotifyCharacter = characteristic;
         } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:ShutdownCharacteristicUUIDString]]) {
             self.shutdownCharacter = characteristic;
         }
-        NSLog(@"发现特征:%@",[characteristic.UUID UUIDString]);
+        NSLog(@"发现特征:%@",characteristic);
     }
 }
 
@@ -425,7 +435,7 @@ static dispatch_once_t token = 0;
     }
     
     // 马达状态
-    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:MotorCharacteristicUUIDString]]) {
+    if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:MotorNotifyCharacteristicUUIDString]]) {
         if (self.motorCharacteristic) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.motorCharacteristic([characteristic.value convertToInt]);
@@ -446,11 +456,9 @@ static dispatch_once_t token = 0;
     }
     // 通知已经开始
     if (characteristic.isNotifying) {
-//        NSLog(@"通知已经开始：UUID:%@",[characteristic.UUID UUIDString]);
         [peripheral readValueForCharacteristic:characteristic];//读取
     } else {
         // 通知已经停止，断开外围
-//        NSLog(@"通知已经停止：UUID:%@",[characteristic.UUID UUIDString]);
         [self.centralManager cancelPeripheralConnection:self.peripheral];
     }
 }
