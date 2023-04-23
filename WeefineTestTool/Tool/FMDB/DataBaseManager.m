@@ -236,7 +236,10 @@
         //创建文件fileName文件名称，contents文件内容，如果开始没有内容可以设置为nil，attributes文件的属性,初始为nil
         [fileManager createFileAtPath:kCSVFileName contents:nil attributes:nil];
     }
-    
+    // 编码格式
+//    NSStringEncoding gbkEncoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+//    // 够造为NSData，并使用NSData进行文件的写入。
+//    NSData *data = [csvString dataUsingEncoding:gbkEncoding];
     // 够造为NSData，并使用NSData进行文件的写入。
     NSData *data = [csvString dataUsingEncoding:NSUTF8StringEncoding];
     [data writeToFile:path atomically:YES];
@@ -248,7 +251,7 @@
 - (NSArray <NSString *>*)getTableData:(NSString *)tableName {
     NSMutableArray *dataArrM = [NSMutableArray array];
     
-    NSString *title = @"ID,MAC,蓝牙名称,软件版本,硬件版本,固件版本,产品型号,水压(mbar),水温(­°C),气压(pa),快门按键,上按键,下按键,左按键,右按键,漏水测试,关机测试,整机测试结果,时间";
+    NSString *title = @"ID,MAC,蓝牙名称,软件版本,硬件版本,固件版本,产品型号,水压(mbar),水温(℃),气压(pa),快门按键,上按键,下按键,左按键,右按键,漏水测试,关机测试,整机测试结果,时间";
     [dataArrM addObject:title];
     
     [_db open];

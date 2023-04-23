@@ -85,10 +85,11 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
                          @"5":@[kKeyTitle(@"下"), kKeyShortTitle(@"下"), kKeyLongTitle(@"下")],
                          @"6":@[kKeyTitle(@"左"), kKeyShortTitle(@"左"), kKeyLongTitle(@"左")],
                          @"7":@[kKeyTitle(@"右"), kKeyShortTitle(@"右"), kKeyLongTitle(@"右")]};
+    self.deviceInfoModel = [[DeviceInfoModel alloc] init];
 }
 
 - (void)setupData {
-    self.deviceInfoModel = [[DeviceInfoModel alloc] init];
+    [self.deviceInfoModel reset];
     self.leakResultStr = @"";
     self.motorResultStr = @"";
     self.shortPressTimes = 0;
@@ -309,7 +310,12 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     RAC(self.longTimesLabel, text) = [RACObserve(self, longPressTimes) map:^id _Nullable(NSNumber *value) {
         return [NSString stringWithFormat:@"%@", value];
     }];
-    RAC(self.leakLabel, text) = RACObserve(self, leakResultStr);
+    RAC(self.leakLabel, text) = [RACObserve(self, leakResultStr) map:^id _Nullable(NSString * _Nullable value) {
+        if (!isEmptyString(value)) {
+            return [[value substringFromIndex:value.length-1] intValue] == 1 ? @"漏水" : @"没有漏水";
+        }
+        return @"";
+    }];
     RAC(self.motorStateLabel, text) = [RACObserve(self, motorResultStr) map:^id _Nullable(NSString * _Nullable value) {
         if (value.length) {
             int statue = [[value substringFromIndex:value.length-1] intValue];
@@ -343,64 +349,151 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
         } else if (x.intValue == 8 || x.intValue == 9) {
             [self.rightBoxView bringSubviewToFront:self.stepDetailViewArray[x.intValue-4]];
         } else {
+            // 按键视图
             [self.rightBoxView bringSubviewToFront:self.keyView];
             NSString *dicKey = [NSString stringWithFormat:@"%@", x];
             self.keyTitleLabel.text = [self.keyTitleDic[dicKey] objectAtIndex:0];
             self.shortTitleLabel.text = [self.keyTitleDic[dicKey] objectAtIndex:1];
             self.longTitleLabel.text = [self.keyTitleDic[dicKey] objectAtIndex:2];
         }
-        // 传感器测试
+        
         if (x.intValue == 2) {
+            // 传感器测试
             [[PDBluetoothManager shareInstance] readSenseValue];
         } else if (x.intValue == 8) {
+            // 漏水测试
             [[PDBluetoothManager shareInstance] startTestLeak];
+        } else if (x.intValue == 9) {
+            // 关机测试
+            [[PDBluetoothManager shareInstance] shutdownDevice];
+            self.alreadySendShutdown = YES;
         }
     }];
     
     // RAC压缩组合监听【设备信息】
     [[[RACSignal zip:@[RACObserve(self.deviceInfoModel, name), RACObserve(self.deviceInfoModel, mac), RACObserve(self.deviceInfoModel, manufacturer), RACObserve(self.deviceInfoModel, software), RACObserve(self.deviceInfoModel, hardware), RACObserve(self.deviceInfoModel, firmware), RACObserve(self.deviceInfoModel, product)]] skip:1] subscribeNext:^(RACTuple * _Nullable x) {
-        [self.connectBtn setImage:kImageOK forState:UIControlStateNormal];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kSuccessNextTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.step++;
-        });
+        int emptyCount = 0;
+        NSString *result = kTestResultOK;
+        for (NSString *s in x) {
+            if (isEmptyString(s)) {
+                result = kTestResultNC;
+                emptyCount += 1;
+            }
+        }
+        self.deviceInfoModel.deviceInfoResult = emptyCount==7 ? @"" : result;
+    }];
+    [[RACObserve(self.deviceInfoModel, deviceInfoResult) distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+        if (isEmptyString(x)) {
+            return;
+        }
+        if ([x isEqualToString:kTestResultOK]) {
+            [self.connectBtn setImage:kImageOK forState:UIControlStateNormal];
+        } else if ([x isEqualToString:kTestResultNC]) {
+            [self.connectBtn setImage:kImageNC forState:UIControlStateNormal];
+        }
+        [self performSelector:@selector(nextStep) withObject:nil afterDelay:kSuccessNextTime];
     }];
     // RAC压缩组合监听【传感器信息】
     [[[RACSignal zip:@[RACObserve(self.deviceInfoModel, waterPressure), RACObserve(self.deviceInfoModel, temperature), RACObserve(self.deviceInfoModel, gasPressure)]] skip:1] subscribeNext:^(RACTuple * _Nullable x) {
-        [self.sensorBtn setImage:kImageOK forState:UIControlStateNormal];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kSuccessNextTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.step++;
-        });
+        NSString *result = kTestResultOK;
+        for (NSNumber *number in x) {
+            if (number == 0) {
+                result = kTestResultNC;
+                break;
+            }
+        }
+        self.deviceInfoModel.senseInfoResult = result;
+    }];
+    [[RACObserve(self.deviceInfoModel, senseInfoResult) distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+        if (isEmptyString(x)) {
+            return;
+        }
+        if ([x isEqualToString:kTestResultOK]) {
+            [self.sensorBtn setImage:kImageOK forState:UIControlStateNormal];
+        } else if ([x isEqualToString:kTestResultNC]) {
+            [self.sensorBtn setImage:kImageNC forState:UIControlStateNormal];
+        }
+        [self performSelector:@selector(nextStep) withObject:nil afterDelay:kSuccessNextTime];
     }];
     // RAC压缩组合监听【按键检测】
     [[[RACSignal combineLatest:@[RACObserve(self, shortPressTimes), RACObserve(self, longPressTimes)] reduce:^id _Nonnull (NSNumber *shortPressTimes, NSNumber *longPressTimes){
-        BOOL success = shortPressTimes.intValue == 3 && longPressTimes.intValue == 1;
+        BOOL success = shortPressTimes.intValue >= 3 && longPressTimes.intValue >= 1;
         return @(success);
     }]  skip:1] subscribeNext:^(id  _Nullable x) {
         if ([x boolValue]) {
-            UIButton *button;
             if (self.step == 3) {
-                button = self.shutterBtn;
                 self.deviceInfoModel.shutter = kTestResultOK;
             } else if (self.step == 4) {
-                button = self.topBtn;
                 self.deviceInfoModel.up = kTestResultOK;
             } else if (self.step == 5) {
-                button = self.bottomBtn;
                 self.deviceInfoModel.down = kTestResultOK;
             } else if (self.step == 6) {
-                button = self.leftBtn;
                 self.deviceInfoModel.left = kTestResultOK;
             } else if (self.step == 7) {
-                button = self.rightBtn;
                 self.deviceInfoModel.right = kTestResultOK;
             }
-            [button setImage:kImageOK forState:UIControlStateNormal];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kSuccessNextTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                self.step++;
-                self.shortPressTimes = 0;
-                self.longPressTimes = 0;
-            });
         }
+    }];
+    // 快门按键
+    [[RACObserve(self.deviceInfoModel, shutter) distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+        NSLog(@"快门结果 ResultStr ：%@", x);
+        if (isEmptyString(x)) {
+            return;
+        }
+        if ([x isEqualToString:kTestResultOK]) {
+            [self.shutterBtn setImage:kImageOK forState:UIControlStateNormal];
+        } else if ([x isEqualToString:kTestResultNC]) {
+            [self.shutterBtn setImage:kImageNC forState:UIControlStateNormal];
+        }
+        [self performSelector:@selector(nextStepOfKey) withObject:nil afterDelay:kSuccessNextTime];
+    }];
+    // 上按键
+    [[RACObserve(self.deviceInfoModel, up) distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+        if (isEmptyString(x)) {
+            return;
+        }
+        if ([x isEqualToString:kTestResultOK]) {
+            [self.topBtn setImage:kImageOK forState:UIControlStateNormal];
+        } else if ([x isEqualToString:kTestResultNC]) {
+            [self.topBtn setImage:kImageNC forState:UIControlStateNormal];
+        }
+        [self performSelector:@selector(nextStepOfKey) withObject:nil afterDelay:kSuccessNextTime];
+    }];
+    // 下按键
+    [[RACObserve(self.deviceInfoModel, down) distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+        if (isEmptyString(x)) {
+            return;
+        }
+        if ([x isEqualToString:kTestResultOK]) {
+            [self.bottomBtn setImage:kImageOK forState:UIControlStateNormal];
+        } else if ([x isEqualToString:kTestResultNC]) {
+            [self.bottomBtn setImage:kImageNC forState:UIControlStateNormal];
+        }
+        [self performSelector:@selector(nextStepOfKey) withObject:nil afterDelay:kSuccessNextTime];
+    }];
+    // 左按键
+    [[RACObserve(self.deviceInfoModel, left) distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+        if (isEmptyString(x)) {
+            return;
+        }
+        if ([x isEqualToString:kTestResultOK]) {
+            [self.leftBtn setImage:kImageOK forState:UIControlStateNormal];
+        } else if ([x isEqualToString:kTestResultNC]) {
+            [self.leftBtn setImage:kImageNC forState:UIControlStateNormal];
+        }
+        [self performSelector:@selector(nextStepOfKey) withObject:nil afterDelay:kSuccessNextTime];
+    }];
+    // 右按键
+    [[RACObserve(self.deviceInfoModel, right) distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+        if (isEmptyString(x)) {
+            return;
+        }
+        if ([x isEqualToString:kTestResultOK]) {
+            [self.rightBtn setImage:kImageOK forState:UIControlStateNormal];
+        } else if ([x isEqualToString:kTestResultNC]) {
+            [self.rightBtn setImage:kImageNC forState:UIControlStateNormal];
+        }
+        [self performSelector:@selector(nextStepOfKey) withObject:nil afterDelay:kSuccessNextTime];
     }];
     
     // 漏水检测
@@ -418,13 +511,19 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     }]  skip:1] subscribeNext:^(id  _Nullable x) {
         if ([x boolValue]) {
             self.deviceInfoModel.leak = kTestResultOK;
-            [self.leakBtn setImage:kImageOK forState:UIControlStateNormal];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kSuccessNextTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                self.step++;
-                self.motorResultStr = @"";
-                self.leakResultStr = @"";
-            });
         }
+    }];
+    // 漏水检测结果
+    [[RACObserve(self.deviceInfoModel, leak) distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+        if (isEmptyString(x)) {
+            return;
+        }
+        if ([x isEqualToString:kTestResultOK]) {
+            [self.leakBtn setImage:kImageOK forState:UIControlStateNormal];
+        } else if ([x isEqualToString:kTestResultNC]) {
+            [self.leakBtn setImage:kImageNC forState:UIControlStateNormal];
+        }
+        [self performSelector:@selector(nextStepOfLeak) withObject:nil afterDelay:kSuccessNextTime];
     }];
     // 总的检测结果
     [[RACSignal combineLatest:@[RACObserve(self.deviceInfoModel, shutter), RACObserve(self.deviceInfoModel, up), RACObserve(self.deviceInfoModel, down), RACObserve(self.deviceInfoModel, left), RACObserve(self.deviceInfoModel, right), RACObserve(self.deviceInfoModel, leak)] reduce:^id _Nonnull (NSString *shutter, NSString *up, NSString *down, NSString *left, NSString *right, NSString *leak){
@@ -436,6 +535,28 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     }] subscribeNext:^(NSString * _Nullable x) {
         self.deviceInfoModel.result = x;
     }];
+    [[RACObserve(self, alreadySendShutdown) distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+        if ([x boolValue]) {
+            [MBProgressHUD showMessage:@"已发送关机指令"];
+        }
+    }];
+}
+
+/// 下一步，用于延时执行
+- (void)nextStep {
+    self.step += 1;
+}
+/// 下一步，用于延时执行【按键检测】
+- (void)nextStepOfKey {
+    self.step += 1;
+    self.shortPressTimes = 0;
+    self.longPressTimes = 0;
+}
+/// 下一步，用于延时执行【漏水检测】
+- (void)nextStepOfLeak {
+    self.step++;
+    self.motorResultStr = @"";
+    self.leakResultStr = @"";
 }
 
 #pragma mark - 事件
@@ -444,40 +565,48 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     NSUInteger tag = sender.tag;
     if (tag == 1001) {
         // 设备信息页面中的下一步
-        [self.connectBtn setImage:kImageNC forState:UIControlStateNormal];
+        self.deviceInfoModel.deviceInfoResult = [self.deviceInfoModel.deviceInfoResult isEqualToString:kTestResultOK] ? kTestResultOK : kTestResultNC;
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(nextStep) object:nil];
+        self.step++;
     } else if (tag == 1002) {
         // 传感器测试下一步
-        [self.sensorBtn setImage:kImageNC forState:UIControlStateNormal];
+        self.deviceInfoModel.senseInfoResult = [self.deviceInfoModel.senseInfoResult isEqualToString:kTestResultOK] ? kTestResultOK : kTestResultNC;
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(nextStep) object:nil];
+        self.step++;
     } else if (tag == 1003) {
         // 按键测试下一步
         if (self.step == 3) {
-            self.deviceInfoModel.shutter = kTestResultNC;
-            [self.shutterBtn setImage:kImageNC forState:UIControlStateNormal];
+            self.deviceInfoModel.shutter = [self.deviceInfoModel.shutter isEqualToString:kTestResultOK] ? kTestResultOK : kTestResultNC;
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(nextStepOfKey) object:nil];
+            [self nextStepOfKey];
         } else if (self.step == 4) {
-            self.deviceInfoModel.up = kTestResultNC;
-            [self.topBtn setImage:kImageNC forState:UIControlStateNormal];
+            self.deviceInfoModel.up = [self.deviceInfoModel.up isEqualToString:kTestResultOK] ? kTestResultOK : kTestResultNC;
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(nextStepOfKey) object:nil];
+            [self nextStepOfKey];
         } else if (self.step == 5) {
-            self.deviceInfoModel.down = kTestResultNC;
-            [self.bottomBtn setImage:kImageNC forState:UIControlStateNormal];
+            self.deviceInfoModel.down = [self.deviceInfoModel.down isEqualToString:kTestResultOK] ? kTestResultOK : kTestResultNC;
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(nextStepOfKey) object:nil];
+            [self nextStepOfKey];
         } else if (self.step == 6) {
-            self.deviceInfoModel.left = kTestResultNC;
-            [self.leftBtn setImage:kImageNC forState:UIControlStateNormal];
+            self.deviceInfoModel.left = [self.deviceInfoModel.left isEqualToString:kTestResultOK] ? kTestResultOK : kTestResultNC;
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(nextStepOfKey) object:nil];
+            [self nextStepOfKey];
         } else if (self.step == 7) {
-            self.deviceInfoModel.right = kTestResultNC;
-            [self.rightBtn setImage:kImageNC forState:UIControlStateNormal];
+            self.deviceInfoModel.right = [self.deviceInfoModel.right isEqualToString:kTestResultOK] ? kTestResultOK : kTestResultNC;
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(nextStepOfKey) object:nil];
+            [self nextStepOfKey];
         }
     } else if (tag == 1008) {
         // 漏水测试下一步
-        self.deviceInfoModel.leak = kTestResultNC;
-        [self.leakBtn setImage:kImageNC forState:UIControlStateNormal];
+        self.deviceInfoModel.leak = [self.deviceInfoModel.leak isEqualToString:kTestResultOK] ? kTestResultOK : kTestResultNC;
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(nextStepOfLeak) object:nil];
+        [self nextStepOfLeak];
     } else if (tag == 1009) {
         // 关机，开始下一个产品测试
         [self setupData];
-        // 漏水测试下一步
         self.deviceInfoModel.shutdown = kTestResultNC;
         [self.shutdownBtn setImage:kImageNC forState:UIControlStateNormal];
     }
-    self.step++;
 }
 
 /// 分享文件

@@ -59,11 +59,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *result;
 
 
+#pragma mark - 额外添加的
+/// 设备信息结果
+@property (nonatomic, strong) NSString *deviceInfoResult;
+/// 传感器信息结果
+@property (nonatomic, strong) NSString *senseInfoResult;
 
 
 
 
-
+/// 重置
+- (void)reset;
 
 
 
