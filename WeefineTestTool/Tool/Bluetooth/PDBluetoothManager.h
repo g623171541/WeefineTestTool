@@ -80,6 +80,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 读取传感器数据：水压、气压、温度
 - (void)readSenseValue;
+/// 监听传感器数据：水压、气压、温度
+- (void)notifySenseValue;
 /// 开始漏水测试
 - (void)startTestLeak;
 /// 打开马达

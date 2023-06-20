@@ -261,7 +261,9 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     RAC(self.temperatureLabel, text) = [RACObserve(self.deviceInfoModel, temperature) map:^id _Nullable(NSNumber *value) {
         return [NSString stringWithFormat:@"%.2f", value.floatValue];
     }];
-    RAC(self.gasPressureLabel, text) = [RACObserve(self.deviceInfoModel, gasPressure) map:intToStringBlock];
+    RAC(self.gasPressureLabel, text) = [RACObserve(self.deviceInfoModel, gasPressure) map:^id _Nullable(NSNumber * _Nullable value) {
+        return [NSString stringWithFormat:@"%@", value];
+    }];
     // 长按短按次数
     RAC(self.shutterShortPressTimesLabel, text) =   [RACObserve(self, shutterShortPressTimes) map:intToStringBlock];
     RAC(self.shutterLongPressTimesLabel, text) =    [RACObserve(self, shutterLongPressTimes) map:intToStringBlock];
@@ -283,8 +285,10 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     
     // RAC压缩组合监听【设备信息】
     [[[RACSignal zip:@[RACObserve(self.deviceInfoModel, name), RACObserve(self.deviceInfoModel, mac), RACObserve(self.deviceInfoModel, manufacturer), RACObserve(self.deviceInfoModel, software), RACObserve(self.deviceInfoModel, hardware), RACObserve(self.deviceInfoModel, firmware), RACObserve(self.deviceInfoModel, product)]] skip:1] subscribeNext:^(RACTuple * _Nullable x) {
-        // 等设备信息结果都出了后开始测试传感器
-        [[PDBluetoothManager shareInstance] readSenseValue];
+        // 等设备信息结果都出了后监听测试传感器
+        [[PDBluetoothManager shareInstance] notifySenseValue];
+        // 漏水测试
+        [[PDBluetoothManager shareInstance] startTestLeak];
     }];
     // 快门按键
     [[RACObserve(self.deviceInfoModel, shutter) distinctUntilChanged] subscribeNext:^(id  _Nullable x) {

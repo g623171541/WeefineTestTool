@@ -130,6 +130,15 @@ static dispatch_once_t token = 0;
     }
 }
 
+/// 监听传感器数据：水压、气压、温度
+- (void)notifySenseValue {
+    if (self.senseCharacterArrM.count == 3) {
+        for (CBCharacteristic *character in self.senseCharacterArrM) {
+            [self.peripheral setNotifyValue:YES forCharacteristic:character];
+        }
+    }
+}
+
 /// 开始漏水测试
 - (void)startTestLeak {
     // 监听漏水

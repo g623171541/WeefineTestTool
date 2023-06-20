@@ -312,7 +312,7 @@ typedef NS_ENUM(NSUInteger, PDPhysicalButtonType) {
     }];
     RAC(self.leakLabel, text) = [RACObserve(self, leakResultStr) map:^id _Nullable(NSString * _Nullable value) {
         if (!isEmptyString(value)) {
-            return [[value substringFromIndex:value.length-1] intValue] == 1 ? @"漏水" : @"没有漏水";
+            return [[value substringFromIndex:value.length-1] intValue] == 1 ? @"漏水" : @"不漏水";
         }
         return @"";
     }];
