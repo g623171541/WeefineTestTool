@@ -1,0 +1,6 @@
+framework module Pods_WeefineQC {
+  umbrella header "Pods-WeefineQC-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,4 @@
+${PODS_ROOT}/Target Support Files/Pods-WeefineQA/Pods-WeefineQA-frameworks.sh
+${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework
+${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework
+${BUILT_PRODUCTS_DIR}/ReactiveObjC/ReactiveObjC.framework

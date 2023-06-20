@@ -1,7 +1,17 @@
 # Uncomment the next line to define a global platform for your project
  platform :ios, '13.0'
 
-target 'WeefineTestTool' do
+target 'WeefineQA' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  pod 'MBProgressHUD'
+  pod 'FMDB'
+  pod 'ReactiveObjC'
+  
+end
+
+target 'WeefineQC' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 

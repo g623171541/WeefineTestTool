@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_WeefineTestToolVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_WeefineTestToolVersionString[];
+FOUNDATION_EXPORT double Pods_WeefineQCVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_WeefineQCVersionString[];
 
